@@ -14,4 +14,11 @@
 // };
 //
 // null로 두면 "체험 모드"로 동작해요 (그 기기 안에서만 저장).
-window.FIREBASE_CONFIG = null;
+window.FIREBASE_CONFIG = {
+  apiKey: "AIzaSyCgqbl4lBuAt4HZmPjC4wYhZu4DZ2_nddU",
+  authDomain: "badminton-courtboard.firebaseapp.com",
+  projectId: "badminton-courtboard",
+  storageBucket: "badminton-courtboard.firebasestorage.app",
+  messagingSenderId: "714673214884",
+  appId: "1:714673214884:web:92107ee500836dbd34dd31"
+};
