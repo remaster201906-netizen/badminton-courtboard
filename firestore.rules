@@ -1,0 +1,47 @@
+rules_version = '2';
+
+// 배드민턴 코트보드 보안 규칙
+// 링크만 있으면 누구나 방을 보고 바꿀 수 있는 공개 보드입니다.
+// 대신 정해진 모양의 데이터만 저장되도록 막아 둡니다.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /rooms/{code} {
+      allow read: if true;
+      allow delete: if code.matches('^[0-9]{4}$');
+      allow create, update: if code.matches('^[0-9]{4}$')
+        && request.resource.data.keys().hasOnly(['name', 'courts', 'mode', 'autoFill', 'queueAuto', 'createdAt'])
+        && request.resource.data.name is string
+        && request.resource.data.name.size() <= 24
+        && request.resource.data.courts is int
+        && request.resource.data.courts >= 1 && request.resource.data.courts <= 12;
+
+      match /members/{id} {
+        allow read, delete: if true;
+        allow create, update: if request.resource.data.keys().hasOnly(['name', 'gender', 'grade', 'rest', 'games', 'lastEnd', 'joinedAt'])
+          && request.resource.data.name is string
+          && request.resource.data.name.size() <= 12
+          && request.resource.data.gender in ['M', 'F'];
+      }
+
+      match /courts/{id} {
+        allow read, delete: if true;
+        allow create, update: if id.matches('^c([1-9]|1[0-2])$')
+          && request.resource.data.keys().hasOnly(['slots', 'startedAt'])
+          && request.resource.data.slots is list
+          && request.resource.data.slots.size() == 4;
+      }
+
+      match /queue/{id} {
+        allow read, delete: if true;
+        allow create, update: if request.resource.data.keys().hasOnly(['slots', 'order'])
+          && request.resource.data.slots is list
+          && request.resource.data.slots.size() == 4;
+      }
+
+      match /locks/{id} {
+        allow read, write: if true;
+      }
+    }
+  }
+}
