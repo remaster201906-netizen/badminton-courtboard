@@ -520,7 +520,7 @@ function leavePresence(){try{S.unsubPeers&&S.unsubPeers()}catch(e){}try{S.named&
 const shuttleSVG=`<svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><path d="M9 4 L23 4 L19.5 19 L12.5 19 Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12 4 L14 19 M16 4 V19 M20 4 L18 19" stroke="currentColor" stroke-width="1.4"/><circle cx="16" cy="24" r="5" fill="var(--accent)"/></svg>`;
 function renderTop(){
   const note=S.api&&S.api.kind==='local'?`<span class="mode-note">체험 모드: 이 기기에만 저장돼요 (firebase-config.js를 채우면 모두 함께 실시간으로 써요)</span>`:(S.api?'':`<span class="mode-note">연결 중…</span>`);
-  $('#top').innerHTML=`<div class="brand">${shuttleSVG}<span>코트보드</span></div><span class="spacer"></span>${note}`;
+  $('#top').innerHTML=`<div class="brand">${shuttleSVG}<span>코트보드</span></div><span class="spacer"></span>${note}<a class="btn sm" href="v2/">새 버전 2 써보기</a>`;
 }
 function renderAll(){
   renderTop();

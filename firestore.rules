@@ -43,5 +43,49 @@ service cloud.firestore {
         allow read, write: if true;
       }
     }
+
+    // ---------- 2버전 (v2/) ----------
+    // 모임: 출석 명단, 코트, 대기 게임, 경기 기록
+    match /meets/{code} {
+      allow read: if true;
+      allow delete: if code.matches('^[0-9]{4}$');
+      allow create, update: if code.matches('^[0-9]{4}$')
+        && request.resource.data.name is string
+        && request.resource.data.name.size() <= 24
+        && request.resource.data.courts is list
+        && request.resource.data.courts.size() >= 1 && request.resource.data.courts.size() <= 12
+        && request.resource.data.keys().size() <= 16;
+
+      match /players/{id} {
+        allow read, delete: if true;
+        allow create, update: if request.resource.data.name is string
+          && request.resource.data.name.size() <= 12
+          && request.resource.data.gender in ['M', 'F']
+          && request.resource.data.keys().size() <= 24;
+      }
+      match /courts/{id} {
+        allow read, delete: if true;
+        allow create, update: if id.matches('^c[0-9]{1,2}$')
+          && request.resource.data.slots is list && request.resource.data.slots.size() == 4;
+      }
+      match /queue/{id} {
+        allow read, delete: if true;
+        allow create, update: if request.resource.data.slots is list && request.resource.data.slots.size() == 4;
+      }
+      match /matches/{id} {
+        allow read, delete: if true;
+        allow create, update: if request.resource.data.a is list && request.resource.data.b is list
+          && request.resource.data.keys().size() <= 12;
+      }
+      match /locks/{id} {
+        allow read, write: if true;
+      }
+    }
+
+    // 통산 기록 (닉네임 기준 누적 승패)
+    match /profiles/{name} {
+      allow read: if true;
+      allow create, update: if request.resource.data.keys().size() <= 12;
+    }
   }
 }

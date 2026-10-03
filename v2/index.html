@@ -1,0 +1,1103 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="배드민턴 모임 운영 보드 2 - 참석 투표, 출석, 스마트 매칭, 전광판, 스코어 기록, 시상식">
+<meta name="theme-color" content="#2F6E57">
+<title>배드민턴 코트보드 2</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M9 4h14l-3.5 15h-7z' fill='none' stroke='%232F6E57' stroke-width='2'/%3E%3Ccircle cx='16' cy='24' r='5' fill='%23E09A2B'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --bg:#EDF1EC; --surface:#FFFFFF; --surface-2:#F4F7F3; --ink:#14211B; --muted:#5A6B62; --line:#D5DDD6;
+  --court:#2F6E57; --court-edge:#27604B; --court-line:rgba(255,255,255,.62);
+  --chip:#FFFFFF; --chip-ink:#14211B;
+  --accent:#E09A2B; --accent-ink:#231703; --primary:#1D3A2E; --primary-ink:#F2F6F3;
+  --male:#2F66B3; --female:#C9476E; --warn:#B4452F; --ok:#2E7D57;
+  --gold:#E2B33C; --silver:#A9B4BD; --bronze:#C58A5A;
+  --sel:#F2B640; --radius:10px;
+  --display:"Do Hyeon","IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --body:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    color-scheme:dark;
+    --bg:#0E1512; --surface:#16201B; --surface-2:#1B2721; --ink:#E4EDE7; --muted:#94A69C; --line:#2A3A31;
+    --court:#23584A; --court-edge:#1D4B3F; --court-line:rgba(255,255,255,.45);
+    --chip:#F3F6F2; --chip-ink:#14211B;
+    --accent:#E8A63C; --accent-ink:#231703; --primary:#CFE3D7; --primary-ink:#0E1512;
+    --male:#6D9BE0; --female:#E37A9A; --warn:#E57B62; --ok:#5DBB8A;
+  }
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{background:var(--bg);margin:0}
+body{color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5;-webkit-tap-highlight-color:transparent;padding-top:env(safe-area-inset-top,0px)}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--sel);outline-offset:2px}
+.wrap{max-width:1240px;margin:0 auto;padding-inline:16px;padding-block:14px 150px}
+h1,h2,h3{font-family:var(--display);font-weight:400;letter-spacing:.01em;text-wrap:balance;margin:0}
+.num{font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:8px 13px;font-weight:600;font-size:14px;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--primary);color:var(--primary-ink);border-color:var(--primary)}
+.btn.accent{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.ghost{background:transparent}
+.btn.danger{color:var(--warn)}
+.btn.danger.armed{background:var(--warn);color:#fff;border-color:var(--warn)}
+.btn.sm{padding:5px 9px;font-size:13px}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+
+.top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding-block:6px 12px}
+.brand{display:flex;align-items:center;gap:9px;font-family:var(--display);font-size:22px;background:none;border:0;padding:0}
+.brand sup{font-family:var(--body);font-size:11px;font-weight:700;background:var(--accent);color:var(--accent-ink);border-radius:4px;padding:1px 5px}
+.spacer{flex:1}
+.mode-note{font-size:12.5px;color:var(--muted);background:var(--surface-2);border:1px dashed var(--line);border-radius:8px;padding:6px 10px}
+
+.hero{display:grid;grid-template-columns:1.1fr 1fr;gap:28px;align-items:center;padding-block:8px 24px}
+.hero h1{font-size:clamp(32px,6vw,52px);line-height:1.05}
+.hero p{color:var(--muted);max-width:36em;margin:12px 0 0}
+.flow{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;counter-reset:s}
+.flow li{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:10px 12px;font-size:13.5px;counter-increment:s}
+.flow li::before{content:counter(s);display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--court);color:#fff;font-weight:700;font-size:12px;margin-right:6px}
+.flow b{font-size:14.5px}
+.flow span{display:block;color:var(--muted);margin-top:2px}
+.home-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;display:flex;flex-direction:column;gap:14px}
+.panel h2{font-size:24px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field>label,.field>.lbl{font-size:12.5px;font-weight:600;color:var(--muted);letter-spacing:.04em}
+.input{border:1px solid var(--line);background:var(--surface-2);border-radius:8px;padding:10px 12px;width:100%}
+.input:focus{border-color:var(--primary);outline:none}
+.code-input{font-size:28px;letter-spacing:.35em;text-align:center;font-variant-numeric:tabular-nums;font-weight:700}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg label{border:1px solid var(--line);background:var(--surface-2);border-radius:999px;padding:6px 13px;font-size:14px;font-weight:600;cursor:pointer;user-select:none}
+.seg input:checked+label{background:var(--primary);color:var(--primary-ink);border-color:var(--primary)}
+.seg input:focus-visible+label{outline:3px solid var(--sel);outline-offset:2px}
+.seg.g input[value="M"]:checked+label{background:var(--male);border-color:var(--male);color:#fff}
+.seg.g input[value="F"]:checked+label{background:var(--female);border-color:var(--female);color:#fff}
+.seg.avs label{font-size:22px;padding:4px 9px;line-height:1.3}
+.seg.cols label{width:34px;height:34px;padding:0;border-width:3px;border-color:transparent}
+.seg.cols input:checked+label{border-color:var(--ink)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.section-h{display:flex;align-items:baseline;gap:10px;margin:26px 0 12px;flex-wrap:wrap}
+.section-h h2{font-size:24px}
+.section-h span{color:var(--muted);font-size:13px}
+.rooms{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.room-card{text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px;display:flex;flex-direction:column;gap:4px}
+.room-card:hover{border-color:var(--court)}
+.room-card b{font-size:16px}
+.room-card .code{font-family:var(--display);font-size:22px;color:var(--court);letter-spacing:.12em}
+.room-card small{color:var(--muted)}
+.empty-note{color:var(--muted);background:var(--surface);border:1px dashed var(--line);border-radius:var(--radius);padding:18px;text-align:center}
+.loading{color:var(--muted);padding:30px;text-align:center}
+
+.room-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.room-head h1{font-size:clamp(24px,4vw,32px)}
+.codechip{font-family:var(--display);font-size:18px;letter-spacing:.14em;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:3px 10px}
+.live{font-size:13px;color:var(--ok);display:inline-flex;align-items:center;gap:6px;font-weight:600}
+.live::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor;animation:pulse 2s infinite}
+@keyframes pulse{50%{opacity:.35}}
+.tabs{display:flex;gap:4px;overflow-x:auto;position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--bg);padding-block:6px;margin-bottom:12px;border-bottom:1px solid var(--line)}
+.tabs button{border:0;background:transparent;padding:8px 14px;border-radius:8px;font-weight:700;font-size:15px;color:var(--muted);white-space:nowrap}
+.tabs button[aria-selected="true"]{background:var(--primary);color:var(--primary-ink)}
+.banner{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--radius);padding:10px 12px;margin-bottom:12px;font-size:14px}
+
+.av{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;font-size:18px;line-height:1;flex:none;font-style:normal}
+.av.lg{width:52px;height:52px;font-size:30px}
+.av.xl{width:76px;height:76px;font-size:44px}
+.gdot{font-style:normal;font-weight:700;font-size:11.5px;border-radius:4px;padding:0 5px;color:#fff}
+.gdot,.gr,.tag{white-space:nowrap;flex:none}
+.meta span{white-space:nowrap}
+.gdot.M{background:var(--male)}.gdot.F{background:var(--female)}
+.gr{font-weight:700;font-size:11.5px;border:1px solid currentColor;border-radius:4px;padding:0 5px;line-height:1.45}
+.tag{font-size:11.5px;font-weight:700;border-radius:4px;padding:0 6px;background:var(--surface-2);color:var(--muted);border:1px solid var(--line)}
+.state{font-size:12.5px;font-weight:700;border-radius:999px;padding:2px 9px;background:var(--surface);border:1px solid var(--line);white-space:nowrap}
+.state.play{background:var(--court);color:#fff;border-color:var(--court)}
+.state.next{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.state.rest,.state.none{color:var(--muted)}
+
+/* 출석 */
+.kpis{display:flex;gap:8px;flex-wrap:wrap}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:8px 14px;min-width:84px}
+.kpi b{display:block;font-family:var(--display);font-size:26px;line-height:1.1;font-variant-numeric:tabular-nums}
+.kpi span{font-size:12.5px;color:var(--muted)}
+.mebox{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--surface);border:2px solid var(--court);border-radius:var(--radius);padding:12px;margin-block:12px}
+.mebox .who{font-weight:700;font-size:17px}
+.plist{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:8px}
+.prow{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:8px 10px}
+.prow .nm{font-weight:700;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.prow .acts{margin-left:auto;display:flex;gap:4px;flex:none}
+.prow.off{opacity:.6}
+
+/* 설정 */
+.setgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.check{display:flex;gap:8px;align-items:flex-start;font-size:14px}
+.check input{width:18px;height:18px;margin-top:2px;flex:none}
+.cchips{display:flex;gap:6px;flex-wrap:wrap}
+.cchip{display:inline-flex;align-items:center;gap:6px;background:var(--court);color:#fff;border-radius:8px;padding:5px 6px 5px 11px;font-weight:700}
+.cchip button{border:0;background:rgba(255,255,255,.2);color:#fff;border-radius:6px;width:22px;height:22px;line-height:1;padding:0}
+.algo{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.algo div{background:var(--surface-2);border-radius:var(--radius);padding:12px;font-size:13.5px}
+.algo b{display:block;font-size:14.5px;margin-bottom:2px}
+
+/* 코트 */
+.toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:10px 12px;margin-bottom:12px}
+.stats{display:flex;gap:14px;font-size:13.5px;color:var(--muted);flex-wrap:wrap}
+.stats b{color:var(--ink);font-variant-numeric:tabular-nums}
+.board{display:grid;grid-template-columns:1fr 330px;gap:16px;align-items:start}
+.maincol{min-width:0}
+.courts{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.court{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:10px;display:flex;flex-direction:column;gap:9px;position:relative}
+.court.moving{outline:3px solid var(--sel)}
+.court header{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.court header h3{font-size:21px}
+.pill{font-size:12.5px;font-weight:700;border-radius:999px;padding:2px 9px;background:var(--surface-2);color:var(--muted)}
+.pill.play{background:var(--court);color:#fff}
+.pill.part,.pill.next{background:var(--accent);color:var(--accent-ink)}
+.court .sum,.qgame .sum{margin-left:auto;font-size:12.5px;color:var(--muted)}
+.floor{position:relative;background:var(--court);border:3px solid var(--court-edge);border-radius:6px;aspect-ratio:134/61;min-height:196px;max-width:100%;display:grid;grid-template-columns:1fr 1fr;overflow:hidden}
+.floor .lines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.floor .lines *{fill:none;stroke:var(--court-line);stroke-width:1.5;vector-effect:non-scaling-stroke}
+.net{position:absolute;left:50%;top:0;bottom:0;width:6px;transform:translateX(-50%);background:repeating-linear-gradient(0deg,rgba(255,255,255,.85) 0 2px,rgba(0,0,0,.25) 2px 5px)}
+.half{position:relative;display:grid;grid-template-rows:1fr 1fr;gap:8px;padding:12px 16px 12px 24px;align-items:center}
+.half.hb{padding:12px 24px 12px 16px}
+.tlabel{position:absolute;top:4px;font-family:var(--display);font-size:13px;color:rgba(255,255,255,.8);letter-spacing:.08em}
+.ha .tlabel{left:8px}.hb .tlabel{right:8px}
+.slot{background:var(--chip);color:var(--chip-ink);border:2px solid transparent;border-radius:8px;padding:5px 8px;min-height:50px;text-align:left;display:flex;align-items:center;gap:7px;box-shadow:0 1px 2px rgba(0,0,0,.18)}
+.slot .tx{min-width:0;display:flex;flex-direction:column;gap:1px}
+.slot .nm{font-weight:700;font-size:15px;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.slot.empty{background:rgba(255,255,255,.12);color:rgba(255,255,255,.85);border:2px dashed rgba(255,255,255,.5);box-shadow:none;justify-content:center;font-weight:600;font-size:13.5px}
+.slot.sel,.wrow.sel .who{border-color:var(--sel);box-shadow:0 0 0 3px var(--sel)}
+.slot.me .nm::after{content:" (나)";font-weight:500;color:#5A6B62;font-size:12px}
+.meta{display:flex;align-items:center;gap:5px;font-size:12px;color:#4d5c55}
+.court footer,.qgame footer{display:flex;gap:6px;flex-wrap:wrap}
+.court .swap-cover{position:absolute;inset:0;background:color-mix(in srgb,var(--surface) 70%,transparent);display:grid;place-items:center;border-radius:var(--radius);z-index:2}
+.queue{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.queue .empty-note{grid-column:1/-1}
+.qgame{background:var(--surface);border:1px dashed var(--court);border-radius:var(--radius);padding:10px;display:flex;flex-direction:column;gap:9px}
+.qgame header{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.qgame header h3{font-size:19px}
+.qteams{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center}
+.qteam{display:grid;gap:6px;min-width:0}
+.vs{font-family:var(--display);color:var(--muted);font-size:15px}
+.qgame .slot:not(.sel){border-color:var(--line)}
+.qgame .slot{min-height:46px}
+.qgame .slot.empty{background:var(--surface-2);color:var(--muted);border-color:var(--line)}
+.side{display:flex;flex-direction:column;gap:14px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 62px)}
+.list{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:12px}
+.list h3{font-size:20px;display:flex;align-items:center;gap:8px}
+.list h3 .count{font-family:var(--body);font-size:13px;font-weight:700;background:var(--surface-2);border-radius:999px;padding:1px 8px}
+.list .hint{font-size:12.5px;color:var(--muted);margin:3px 0 8px}
+.list ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;max-height:52vh;overflow:auto}
+.wrow{display:flex;gap:6px;align-items:stretch}
+.wrow .who{flex:1;min-width:0;display:flex;align-items:center;gap:7px;border:2px solid transparent;background:var(--surface-2);border-radius:8px;padding:5px 8px;text-align:left}
+.wrow .no{font-variant-numeric:tabular-nums;font-size:12px;color:var(--muted);width:18px;text-align:right;flex:none}
+.wrow .nm{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.wrow .gm{margin-left:auto;font-size:12px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+.addbtn{width:100%;justify-content:center;margin-top:10px;border-style:dashed}
+
+/* 전광판 */
+.scoreboard{display:grid;gap:14px}
+.mynext{background:var(--primary);color:var(--primary-ink);border-radius:var(--radius);padding:16px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.mynext .big{font-family:var(--display);font-size:clamp(24px,5vw,36px);line-height:1.1}
+.mynext select{background:transparent;border:1px solid color-mix(in srgb,var(--primary-ink) 40%,transparent);border-radius:8px;padding:6px 8px;color:inherit}
+.mynext select option{color:#14211B}
+.lgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:10px}
+.lcard{background:var(--court);color:#fff;border-radius:var(--radius);padding:12px;display:grid;gap:6px}
+.lcard.q{background:var(--surface);color:var(--ink);border:1px dashed var(--court)}
+.lcard.idle{background:var(--surface-2);color:var(--muted)}
+.lcard h3{font-size:20px;display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.lcard h3 span{font-family:var(--body);font-size:13px;font-weight:700;font-variant-numeric:tabular-nums}
+.lteam{display:flex;gap:6px;align-items:center;font-weight:700;font-size:16px;flex-wrap:wrap}
+.lvs{font-size:12px;opacity:.75;font-weight:700}
+.lwait{display:flex;flex-wrap:wrap;gap:6px;list-style:none;margin:0;padding:0}
+.lwait li{background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:3px 10px 3px 4px;display:flex;align-items:center;gap:6px;font-weight:600;font-size:14px}
+.lwait li.me{border-color:var(--sel);box-shadow:0 0 0 2px var(--sel)}
+
+/* 기록 / 랭킹 */
+.tablewrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{padding:8px 10px;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums;border-bottom:1px solid var(--line)}
+th{font-size:12px;color:var(--muted);letter-spacing:.04em;font-weight:600}
+td.l,th.l{text-align:left}
+tr:last-child td{border-bottom:0}
+td .pn{display:inline-flex;align-items:center;gap:7px;font-weight:700}
+tr.me td{background:color-mix(in srgb,var(--sel) 18%,transparent)}
+.mlist{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.mrow{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:10px 12px;display:grid;grid-template-columns:1fr auto 1fr auto;gap:10px;align-items:center}
+.mrow .t{font-weight:700;min-width:0}
+.mrow .t.b{text-align:right}
+.mrow .t.win{color:var(--ok)}
+.mrow .sc{font-family:var(--display);font-size:24px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.mrow .info{grid-column:1/-1;font-size:12.5px;color:var(--muted);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+
+/* 시상 */
+.podium-card{background:linear-gradient(180deg,var(--court),var(--court-edge));color:#fff;border-radius:14px;padding:22px 16px 0;text-align:center;overflow:hidden}
+.podium-card h2{font-size:clamp(26px,6vw,40px)}
+.podium-card .sub{opacity:.85;font-size:14px;margin-top:2px}
+.podium{display:grid;grid-template-columns:1fr 1.15fr 1fr;gap:8px;align-items:end;max-width:560px;margin:22px auto 0}
+.pod{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0}
+.pod .medal{font-size:34px;line-height:1}
+.pod .pname{font-weight:700;font-size:17px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pod .pstat{font-size:12.5px;opacity:.9;font-variant-numeric:tabular-nums}
+.pod .block{width:100%;border-radius:8px 8px 0 0;margin-top:6px;display:grid;place-items:center;font-family:var(--display);font-size:34px;color:#1b1503}
+.pod.p1 .block{height:120px;background:var(--gold)}
+.pod.p2 .block{height:86px;background:var(--silver)}
+.pod.p3 .block{height:62px;background:var(--bronze)}
+.awards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:14px}
+.award{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:12px;display:flex;gap:10px;align-items:center}
+.award small{display:block;color:var(--muted);font-size:12.5px}
+.award b{font-size:16px}
+body.capture .top,body.capture .tabs,body.capture .room-head,body.capture .nocap{display:none!important}
+
+.actbar{position:fixed;left:0;right:0;bottom:0;z-index:20;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));background:var(--primary);color:var(--primary-ink);box-shadow:0 -6px 24px rgba(0,0,0,.18)}
+.actbar .in{max-width:1240px;margin:0 auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.actbar .msg{flex:1;min-width:200px;font-size:14px}
+.actbar .msg b{font-size:16px}
+.actbar .btn{background:transparent;color:var(--primary-ink);border-color:color-mix(in srgb,var(--primary-ink) 40%,transparent)}
+.actbar .btn.danger.armed{background:var(--warn);border-color:var(--warn);color:#fff}
+.sheet-wrap{position:fixed;inset:0;z-index:30;background:rgba(8,14,11,.55);display:grid;place-items:center;padding:16px}
+.sheet{background:var(--surface);border-radius:12px;padding:20px;width:min(480px,100%);max-height:90vh;overflow:auto;display:flex;flex-direction:column;gap:14px}
+.sheet h2{font-size:24px}
+.sheet .foot{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.scorein{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:end}
+.scorein input{font-size:30px;text-align:center;font-weight:700;font-variant-numeric:tabular-nums}
+.scorein .tn{font-size:13px;font-weight:600;text-align:center;margin-bottom:4px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:40;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;font-size:14px;font-weight:600;max-width:calc(100% - 32px);box-shadow:0 6px 20px rgba(0,0,0,.25)}
+
+@media (max-width:980px){.board{grid-template-columns:1fr}.side{position:static}.list ol{max-height:none}}
+@media (max-width:760px){.hero,.home-grid{grid-template-columns:1fr}.flow{grid-template-columns:1fr 1fr}.courts{grid-template-columns:1fr}.mrow{grid-template-columns:1fr auto 1fr}.mrow .acts{grid-column:1/-1;justify-self:end}}
+@media (max-width:420px){.floor{min-height:180px}.half{padding:10px 10px 10px 18px}.half.hb{padding:10px 18px 10px 10px}.slot{padding:4px 6px;gap:5px}.slot .nm{font-size:14px}.slot .av{width:24px;height:24px;font-size:15px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top" id="top"></header>
+  <main id="main"></main>
+</div>
+<div id="bar" class="actbar" hidden></div>
+<div id="sheet" class="sheet-wrap" hidden></div>
+<div id="toast" class="toast" role="status" hidden></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="../firebase-config.js"></script>
+<script>
+(function(){
+"use strict";
+/* ================= 기본 값 ================= */
+const GRADES=['A','B','C','D','초심'];
+const GSCORE={A:5,B:4,C:3,D:2,'초심':1};
+const AV=['🐯','🐰','🐻','🦊','🐼','🐸','🐵','🐧','🦁','🐶','🐱','🐨','🐷','🦄','🐲','🏸'];
+const AVC=['#F6D9A8','#BFE3D0','#C9D8F5','#F5C6D3','#DCCBF2','#F3E38F'];
+const TABS=[['attend','출석'],['setup','설정'],['board','코트'],['live','전광판'],['record','기록·랭킹'],['final','마감·시상']];
+const EMPTY4=()=>[null,null,null,null];
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ls={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const TAB_ID=uid();
+const gs=p=>GSCORE[p.grade]||3;
+const mmss=ms=>{const s=Math.max(0,Math.floor(ms/1000));const m=Math.floor(s/60);return (m<10?'0':'')+m+':'+String(s%60).padStart(2,'0')};
+const mins=ms=>Math.max(0,Math.round(ms/60000));
+const pct=(w,l)=>w+l?Math.round(w/(w+l)*100):0;
+const pkey=n=>(String(n).trim().replace(/[\/.#$\[\]\s]/g,'_').slice(0,40))||'_';
+const pairKey=(a,b)=>a<b?a+'|'+b:b+'|'+a;
+const link=h=>location.origin+location.pathname+'#'+h;
+const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const hhmm=t=>t?new Date(t).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit',hour12:false}):'';
+
+/* ================= 저장소 ================= */
+function FirebaseAPI(fs){
+  const onErr=e=>{console.warn('firestore',e);if(e&&e.code==='permission-denied')toast('데이터베이스 권한 설정을 확인해 주세요.')};
+  const inc=firebase.firestore.FieldValue.increment;
+  return {
+    kind:'remote',
+    watchDoc(p,cb){return fs.doc(p).onSnapshot(s=>cb(s.exists?s.data():null),onErr)},
+    watchCol(p,cb){return fs.collection(p).onSnapshot(q=>cb(q.docs.map(d=>Object.assign({id:d.id},d.data()))),onErr)},
+    async get(p){const s=await fs.doc(p).get();return s.exists?s.data():null},
+    set:(p,b)=>fs.doc(p).set(b),
+    update:(p,b)=>fs.doc(p).update(b),
+    del:p=>fs.doc(p).delete(),
+    inc(p,nums,extra){const b=Object.assign({},extra);Object.keys(nums).forEach(k=>{b[k]=inc(nums[k])});return fs.doc(p).set(b,{merge:true})},
+    async lock(p){const ref=fs.doc(p);try{return await fs.runTransaction(async t=>{const s=await t.get(ref);const now=Date.now();const d=s.exists?s.data():null;
+      if(d&&d.until>now&&d.holder!==TAB_ID)return false;t.set(ref,{holder:TAB_ID,until:now+4000});return true})}catch(e){return true}}
+  };
+}
+const Local=(function(){
+  const KEY='bdboard2.local';
+  const load=()=>{try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return {}}};
+  let data=load();const subs=new Set();
+  const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){}};
+  const colDocs=p=>{const pre=p+'/';return Object.keys(data).filter(k=>k.startsWith(pre)&&!k.slice(pre.length).includes('/')).map(k=>Object.assign({id:k.slice(pre.length)},data[k]))};
+  const deliver=s=>s.cb(s.kind==='doc'?(data[s.path]?Object.assign({},data[s.path]):null):colDocs(s.path));
+  const emit=()=>subs.forEach(deliver);
+  window.addEventListener('storage',e=>{if(e.key===KEY){data=load();emit()}});
+  const sub=(kind,path,cb)=>{const s={kind,path,cb};subs.add(s);setTimeout(()=>subs.has(s)&&deliver(s));return()=>subs.delete(s)};
+  return {
+    kind:'local',
+    watchDoc:(p,cb)=>sub('doc',p,cb),watchCol:(p,cb)=>sub('col',p,cb),
+    async get(p){return data[p]?Object.assign({},data[p]):null},
+    async set(p,b){data[p]=JSON.parse(JSON.stringify(b));save();emit()},
+    async update(p,b){if(!data[p])throw{code:'not-found'};data[p]=Object.assign({},data[p],JSON.parse(JSON.stringify(b)));save();emit()},
+    async del(p){delete data[p];save();emit()},
+    async inc(p,nums,extra){const d=Object.assign({},data[p],extra);Object.keys(nums).forEach(k=>{d[k]=(d[k]||0)+nums[k]});data[p]=d;save();emit()},
+    async lock(){return true}
+  };
+})();
+
+/* ================= 상태 ================= */
+const S={api:null,meets:[],meetsLoaded:false,view:'home',code:null,tab:'attend',meet:null,meetLoaded:false,players:[],playersLoaded:false,courts:{},queue:[],matches:[],
+  meId:null,sel:null,courtSel:null,armed:null,unsubs:[],prof:{},voteFormDone:false,D:null};
+const base=()=>'meets/'+S.code;
+const playerPath=id=>base()+'/players/'+id;
+const courtPath=cid=>base()+'/courts/'+cid;
+const queuePath=qid=>base()+'/queue/'+qid;
+const byId=id=>S.players.find(p=>p.id===id);
+const opt=()=>Object.assign({priority:'balance',noRepeat:true,mixed:true,autoFill:true,queueAuto:2},S.meet&&S.meet.opt);
+const closed=()=>!!(S.meet&&S.meet.status==='closed');
+const courtNums=()=>((S.meet&&S.meet.courts)||[1]).slice(0,12);
+const courtIds=()=>courtNums().map(n=>'c'+n);
+const isQ=c=>String(c).startsWith('q_');
+const playable=p=>p&&p.here&&!p.out&&!p.rest;
+const slotLabel=c=>isQ(c)?'대기 게임 '+(S.queue.findIndex(q=>q.id===c)+1):'코트 '+c.slice(1);
+function cleanSlots(sl){const out=EMPTY4();(sl||[]).slice(0,4).forEach((id,i)=>{out[i]=id&&playable(byId(id))?id:null});return out}
+function getCourt(cid){
+  if(isQ(cid)){const q=S.queue.find(x=>x.id===cid)||{};return {slots:cleanSlots(q.slots),startedAt:0,order:q.order||0}}
+  const c=S.courts[cid]||{};return {slots:cleanSlots(c.slots),startedAt:c.startedAt||0}}
+
+/* 경기 기록에서 모든 통계를 계산한다 (게임 수, 승패, 득실, 파트너/상대 횟수) */
+function calc(){
+  const st={},P={},O={},on={};
+  S.players.forEach(p=>{st[p.id]={g:0,w:0,l:0,pf:0,pa:0,lastEnd:0,playMs:0}});
+  for(const m of S.matches){
+    const A=m.a||[],B=m.b||[];const scored=typeof m.sa==='number'&&typeof m.sb==='number';
+    const aw=scored?m.sa>m.sb:m.win==='a',bw=scored?m.sb>m.sa:m.win==='b';
+    A.concat(B).forEach(id=>{const s=st[id];if(!s)return;s.g++;s.lastEnd=Math.max(s.lastEnd,m.endedAt||0);s.playMs+=Math.max(0,(m.endedAt||0)-(m.startedAt||m.endedAt||0))});
+    A.forEach(id=>{const s=st[id];if(!s)return;if(aw)s.w++;else if(bw)s.l++;if(scored){s.pf+=m.sa;s.pa+=m.sb}});
+    B.forEach(id=>{const s=st[id];if(!s)return;if(bw)s.w++;else if(aw)s.l++;if(scored){s.pf+=m.sb;s.pa+=m.sa}});
+    if(A.length===2){const k=pairKey(A[0],A[1]);P[k]=(P[k]||0)+1}
+    if(B.length===2){const k=pairKey(B[0],B[1]);P[k]=(P[k]||0)+1}
+    A.forEach(a=>B.forEach(b=>{const k=pairKey(a,b);O[k]=(O[k]||0)+1}));
+  }
+  for(const cid of courtIds())getCourt(cid).slots.forEach((id,i)=>{if(id&&!on[id])on[id]={cid,i}});
+  S.queue.forEach((q,qi)=>cleanSlots(q.slots).forEach((id,i)=>{if(id&&!on[id])on[id]={cid:q.id,i,q:qi+1}}));
+  return {st,P,O,on};
+}
+const since=(p,D)=>D.st[p.id].lastEnd||p.checkinAt||0;
+function waitingList(D){return S.players.filter(p=>playable(p)&&!D.on[p.id]).sort((a,b)=>D.st[a.id].g-D.st[b.id].g||since(a,D)-since(b,D))}
+function restList(){return S.players.filter(p=>p.here&&!p.out&&p.rest).sort((a,b)=>String(a.name).localeCompare(b.name,'ko'))}
+function waitMs(p,D,now){
+  if(!p.checkinAt)return 0;
+  const end=p.out?(p.outAt||now):((S.meet&&S.meet.closedAt)||now);
+  let ms=end-p.checkinAt-(p.restMs||0)-(p.rest&&p.restAt?end-p.restAt:0)-D.st[p.id].playMs;
+  const pos=D.on[p.id];if(pos&&!pos.q){const c=getCourt(pos.cid);if(c.startedAt&&c.slots.every(Boolean))ms-=end-c.startedAt}
+  return Math.max(0,ms);
+}
+function ranking(D){
+  return S.players.filter(p=>D.st[p.id].g>0).map(p=>{const s=D.st[p.id];return {p,s,rate:pct(s.w,s.l),diff:s.pf-s.pa}})
+    .sort((a,b)=>b.s.w-a.s.w||b.rate-a.rate||b.diff-a.diff||b.s.pf-a.s.pf||String(a.p.name).localeCompare(b.p.name,'ko'));
+}
+
+async function w(fn){
+  try{await fn();return true}catch(e){
+    console.error(e);
+    if(e&&e.code==='permission-denied')toast('저장이 거부됐어요. Firebase 보안 규칙을 확인해 주세요.');
+    else if(e&&e.code==='not-found')toast('방금 다른 사람이 바꾼 항목이에요. 화면을 확인하고 다시 눌러 주세요.');
+    else toast('저장하지 못했어요. 잠시 후 다시 눌러 주세요.');
+    render();return false;
+  }
+}
+let toastT=null;
+function toast(msg){const t=$('#toast');t.textContent=msg;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>{t.hidden=true},3000)}
+async function copy(txt,okMsg){try{await navigator.clipboard.writeText(txt);toast(okMsg)}catch(_){openSheet('copy',txt)}}
+
+/* ================= 스마트 매칭 ================= */
+// 대기 순서(게임 수 적은 사람 → 오래 기다린 사람) 맨 앞 사람은 반드시 포함하고,
+// 나머지 3명과 팀 나누기는 [급수 차이] [팀 급수합 차이] [파트너·상대 겹침] [성비] 비용이 가장 낮은 조합으로 고른다.
+function pickFour(pool,D){
+  if(pool.length<4)return null;
+  const o=opt();const rest=o.priority==='rest';
+  const W=pool.slice(0,Math.min(pool.length,rest?6:9));
+  const wP=rest?2.2:0.6,wS=rest?1.2:3,wT=2,wR=o.noRepeat?2.5:0,wG=o.mixed?1:0;
+  const pc=(a,b)=>D.P[pairKey(a.id,b.id)]||0,oc=(a,b)=>D.O[pairKey(a.id,b.id)]||0;
+  const SPL=[[0,1,2,3],[0,2,1,3],[0,3,1,2]];
+  let best=null;const n=W.length-1;
+  for(let i=0;i<n;i++)for(let j=i+1;j<n;j++)for(let k=j+1;k<n;k++){
+    const four=[W[0],W[i+1],W[j+1],W[k+1]];
+    const sc=four.map(gs);const spread=Math.max.apply(null,sc)-Math.min.apply(null,sc);
+    const males=four.filter(p=>p.gender==='M').length;
+    const baseCost=(i+j+k)*wP+spread*wS+((males===1||males===3)?3*wG:0);
+    for(const s of SPL){
+      const q=s.map(x=>four[x]);
+      const diff=Math.abs(gs(q[0])+gs(q[1])-gs(q[2])-gs(q[3]));
+      const rep=3*(pc(q[0],q[1])+pc(q[2],q[3]))+oc(q[0],q[2])+oc(q[0],q[3])+oc(q[1],q[2])+oc(q[1],q[3]);
+      const split=(males===2&&q[0].gender===q[1].gender)?4*wG:0;
+      const cost=baseCost+diff*wT+rep*wR+split+Math.random()*0.01;
+      if(!best||cost<best.cost)best={cost,q};
+    }
+  }
+  return best.q;
+}
+async function autoAssign(onlyCid,justEnded,o2){
+  o2=o2||{};
+  if(!S.meet||closed())return;
+  if(o2.queueOnly&&courtIds().some(c=>!getCourt(c).slots.some(Boolean)))return;
+  if(!(await S.api.lock(base()+'/locks/assign'))){if(!o2.quiet)toast('다른 사람이 배정 중이에요. 잠시 후 다시 눌러 주세요.');return}
+  const D=calc();let pool=waitingList(D);
+  if(justEnded&&justEnded.length){const set=new Set(justEnded);pool=pool.filter(p=>!set.has(p.id)).concat(pool.filter(p=>set.has(p.id)))}
+  const writes=[];const queue=S.queue.slice();const qDel=[];let fromQ=0;let courtLeftEmpty=false;
+  for(const cid of o2.queueOnly?[]:courtIds()){
+    if(onlyCid&&cid!==onlyCid){if(!getCourt(cid).slots.some(Boolean))courtLeftEmpty=true;continue}
+    const c=justEnded&&cid===onlyCid?{slots:EMPTY4(),startedAt:0}:getCourt(cid);const empty=c.slots.filter(x=>!x).length;
+    if(!empty)continue;
+    if(empty===4&&queue.length){
+      const qg=queue.shift();const sl=cleanSlots(qg.slots);
+      for(let i=0;i<4;i++)if(!sl[i]&&pool.length)sl[i]=pool.shift().id;
+      writes.push([cid,{slots:sl,startedAt:Date.now()}]);qDel.push(qg.id);fromQ++;continue;
+    }
+    if(empty===4){const t=pickFour(pool,D);if(!t){courtLeftEmpty=true;break}pool=pool.filter(p=>t.indexOf(p)<0);writes.push([cid,{slots:t.map(p=>p.id),startedAt:Date.now()}])}
+    else if(pool.length>=empty){const ns=c.slots.map(x=>x||pool.shift().id);writes.push([cid,{slots:ns,startedAt:c.startedAt||Date.now()}])}
+  }
+  const qWrites=[];const target=+opt().queueAuto||0;
+  if(target>0&&!courtLeftEmpty){
+    for(const q of queue){const sl=cleanSlots(q.slots);const need=sl.filter(x=>!x).length;if(need&&pool.length>=need)qWrites.push([q.id,{slots:sl.map(x=>x||pool.shift().id),order:q.order||Date.now()}])}
+    let order=Math.max(Date.now(),(queue.length?queue[queue.length-1].order||0:0)+1);
+    for(let n=queue.length;n<target;n++){const t=pickFour(pool,D);if(!t)break;pool=pool.filter(p=>t.indexOf(p)<0);qWrites.push(['q_'+uid(),{slots:t.map(p=>p.id),order:order++}])}
+  }
+  const newQ=qWrites.filter(x=>!queue.some(q=>q.id===x[0])).length;
+  if(!writes.length&&!qWrites.length){if(o2.quiet)return;toast(waitingList(D).length<4?'대기 인원이 4명보다 적어요.':'빈 코트가 없고 대기 게임도 다 차 있어요.');return}
+  const ok=await w(async()=>{for(const [cid,b] of writes)await S.api.set(courtPath(cid),b);for(const q of qDel)await S.api.del(queuePath(q));for(const [qid,b] of qWrites)await S.api.set(queuePath(qid),b)});
+  if(!ok)return;
+  const parts=[];
+  if(fromQ)parts.push(`대기 게임 ${fromQ}개를 코트에 넣었어요.`);
+  if(writes.length>fromQ)parts.push(`코트 ${writes.length-fromQ}곳에 새 팀을 짰어요.`);
+  if(newQ)parts.push(`대기 게임 ${newQ}개를 새로 짰어요.`);
+  if(parts.length)toast(parts.join(' '));
+}
+const topUpQueue=()=>autoAssign(null,null,{queueOnly:true,quiet:true});
+async function setSlots(cid,slots){
+  if(isQ(cid)){await S.api.set(queuePath(cid),{slots,order:getCourt(cid).order||Date.now()});return}
+  const c=getCourt(cid);const any=slots.some(Boolean);
+  await S.api.set(courtPath(cid),{slots,startedAt:any?(c.startedAt||Date.now()):0});
+}
+async function removeFromCourts(id){
+  const pos=calc().on[id];if(!pos)return;
+  const sl=getCourt(pos.cid).slots;sl[pos.i]=null;await setSlots(pos.cid,sl);
+}
+async function addQueueGame(){
+  const D=calc();const t=pickFour(waitingList(D),D);
+  if(!t){toast('대기 인원이 4명보다 적어서 대기 게임을 만들 수 없어요.');return}
+  const last=S.queue.length?S.queue[S.queue.length-1].order||0:0;
+  if(await w(()=>S.api.set(queuePath('q_'+uid()),{slots:t.map(p=>p.id),order:Math.max(Date.now(),last+1)})))toast('대기 게임을 하나 더 짰어요.');
+}
+async function reshuffleQueue(qid){
+  const D=calc();const cur=getCourt(qid).slots.filter(Boolean).map(byId);
+  const t=pickFour(cur.concat(waitingList(D)),D);
+  if(!t){toast('다시 짤 인원이 모자라요.');return}
+  if(await w(()=>setSlots(qid,t.map(p=>p.id))))toast(slotLabel(qid)+'을 다시 짰어요.');
+}
+async function queueUp(qid){
+  const i=S.queue.findIndex(q=>q.id===qid);if(i<1)return;
+  const a=S.queue[i-1],b=S.queue[i];
+  await w(async()=>{await S.api.set(queuePath(a.id),{slots:cleanSlots(a.slots),order:b.order});await S.api.set(queuePath(b.id),{slots:cleanSlots(b.slots),order:a.order})});
+}
+async function queueToCourt(qid){
+  const cid=courtIds().find(c=>!getCourt(c).slots.some(Boolean));
+  if(!cid){toast('빈 코트가 없어요. 경기가 끝나면 자동으로 들어가요.');return}
+  const sl=getCourt(qid).slots;
+  if(await w(async()=>{await S.api.set(courtPath(cid),{slots:sl,startedAt:Date.now()});await S.api.del(queuePath(qid))}))toast('코트 '+cid.slice(1)+'에 넣었어요.');
+}
+
+/* ================= 동작 ================= */
+function same(a,b){return a&&b&&a.kind===b.kind&&a.c===b.c&&a.i===b.i&&a.id===b.id}
+async function tap(t){
+  const s=S.sel;S.armed=null;
+  if(!s){S.sel=t;render();return}
+  if(same(s,t)){S.sel=null;render();return}
+  if(s.kind!=='slot'&&t.kind!=='slot'){S.sel=t;render();return}
+  S.sel=null;
+  if(s.kind==='slot'&&t.kind==='slot'){
+    const A=getCourt(s.c).slots;const B=s.c===t.c?A:getCourt(t.c).slots;
+    const va=A[s.i],vb=B[t.i];
+    if(!va&&!vb){S.sel=t;render();return}
+    A[s.i]=vb;B[t.i]=va;
+    await w(async()=>{await setSlots(s.c,A);if(s.c!==t.c)await setSlots(t.c,B)});
+  }else{
+    const slot=s.kind==='slot'?s:t,pl=s.kind==='slot'?t:s;
+    const A=getCourt(slot.c).slots;A[slot.i]=pl.id;
+    await w(async()=>{if(pl.kind==='rest')await restOff(pl.id);await setSlots(slot.c,A)});
+  }
+  render();
+}
+async function restOff(id){const p=byId(id);if(!p)return;await S.api.update(playerPath(id),{rest:false,restAt:0,restMs:(p.restMs||0)+(p.restAt?Date.now()-p.restAt:0)})}
+async function setRest(id,rest){
+  if(await w(async()=>{if(rest){await removeFromCourts(id);await S.api.update(playerPath(id),{rest:true,restAt:Date.now()})}else await restOff(id)}))await topUpQueue();
+}
+async function setHere(id,here){
+  const p=byId(id);if(!p)return;const now=Date.now();
+  const ok=await w(async()=>{
+    if(here)await S.api.update(playerPath(id),{here:true,out:false,vote:'yes',checkinAt:p.checkinAt||now});
+    else{await removeFromCourts(id);await S.api.update(playerPath(id),{here:false})}
+  });
+  if(ok&&here){toast(p.name+' 님 출석!');showCareer(p.name);topUpQueue()}
+}
+async function removePlayer(id){
+  const p=byId(id);if(!p)return;const D=calc();
+  const ok=await w(async()=>{
+    await removeFromCourts(id);
+    if(D.st[id].g>0)await S.api.update(playerPath(id),{out:true,outAt:Date.now()});   // 경기 기록이 있으면 통계를 위해 남겨 둔다
+    else await S.api.del(playerPath(id));
+  });
+  if(ok){if(id===S.meId){ls.del('bd2.me.'+S.code);S.meId=null}toast(D.st[id].g>0?'퇴장 처리했어요. 경기 기록은 남아 있어요.':'명단에서 뺐어요.');topUpQueue()}
+}
+async function savePlayer(v,mode,id){
+  const nm=v.name.trim().slice(0,12);
+  if(!nm){toast('닉네임을 입력해 주세요.');return null}
+  const dup=S.players.find(p=>String(p.name).trim()===nm&&p.id!==id);
+  const body={name:nm,gender:v.gender,grade:v.grade,av:v.av,color:v.color};
+  if(mode==='checkin'||mode==='vote')ls.set('bd2.profile',JSON.stringify(body));
+  if(mode==='edit'){
+    if(dup){toast('같은 닉네임이 있어요.');return null}
+    return (await w(()=>S.api.update(playerPath(id),body)))?id:null;
+  }
+  if(dup&&dup.out){   // 퇴장했던 사람이 다시 오면 기록을 이어서 쓴다
+    const patch=Object.assign({out:false},body);if(v.vote)patch.vote=v.vote;if(mode==='checkin'||v.here){patch.here=true;patch.checkinAt=dup.checkinAt||Date.now()}
+    return (await w(()=>S.api.update(playerPath(dup.id),patch)))?dup.id:null;
+  }
+  if(dup){
+    if(mode==='guest'){toast('같은 닉네임이 있어요. 뒤에 숫자나 이니셜을 붙여 주세요.');return null}
+    // 총무가 미리 넣어 둔 이름이면 그 사람으로 이어서 쓴다
+    const patch=Object.assign({},body);if(v.vote)patch.vote=v.vote;if(mode==='checkin'){patch.here=true;patch.out=false;patch.checkinAt=dup.checkinAt||Date.now()}
+    return (await w(()=>S.api.update(playerPath(dup.id),patch)))?dup.id:null;
+  }
+  const nid=uid();const now=Date.now();
+  const doc=Object.assign({here:false,out:false,rest:false,guest:mode==='guest',vote:v.vote||null,createdAt:now,checkinAt:0,restMs:0,restAt:0},body);
+  if(mode==='checkin'||(mode==='guest'&&v.here)){doc.here=true;doc.checkinAt=now;doc.vote='yes'}
+  return (await w(()=>S.api.set(playerPath(nid),doc)))?nid:null;
+}
+function setMe(id){S.meId=id;ls.set('bd2.me.'+S.code,id)}
+async function showCareer(name){
+  try{const c=await S.api.get('profiles/'+pkey(name));S.prof[name]=c||{games:0};if(c&&c.games)toast(`${name} 님 출석! 통산 ${c.games}경기 ${c.wins||0}승 ${c.losses||0}패 · 승률 ${pct(c.wins||0,c.losses||0)}%`);render()}catch(e){}
+}
+async function saveMatch(cid,sa,sb,win){
+  const c=getCourt(cid);if(!c.slots.every(Boolean)){toast('4명이 다 있어야 결과를 기록할 수 있어요.');return false}
+  const now=Date.now();const ids=c.slots.slice();
+  const m={court:+cid.slice(1),a:[ids[0],ids[1]],b:[ids[2],ids[3]],sa,sb,win,startedAt:c.startedAt||now,endedAt:now};
+  const ok=await w(async()=>{await S.api.set(base()+'/matches/'+uid(),m);await S.api.set(courtPath(cid),{slots:EMPTY4(),startedAt:0})});
+  if(!ok)return false;
+  toast('코트 '+cid.slice(1)+' 결과를 기록했어요.');
+  if(opt().autoFill)await autoAssign(cid,ids,{quiet:true});
+  return true;
+}
+async function closeMeet(){
+  const D=calc();const now=Date.now();
+  const ok=await w(async()=>{
+    for(const cid of Object.keys(S.courts))await S.api.set(courtPath(cid),{slots:EMPTY4(),startedAt:0});
+    for(const q of S.queue)await S.api.del(queuePath(q.id));
+    await S.api.update(base(),{status:'closed',closedAt:now});
+    if(!S.meet.settled){   // 통산 기록에 이번 모임 성적을 한 번만 더한다
+      for(const p of S.players){const s=D.st[p.id];if(!s.g)continue;
+        await S.api.inc('profiles/'+pkey(p.name),{games:s.g,wins:s.w,losses:s.l,pf:s.pf,pa:s.pa,meets:1},{name:p.name,av:p.av||0,color:p.color||0})}
+      await S.api.update(base(),{settled:true});
+    }
+  });
+  if(ok){S.prof={};toast('모임을 마감했어요. 시상식 화면이 준비됐어요.')}
+}
+
+/* ================= 화면 이동 ================= */
+function stopMeet(){S.unsubs.forEach(u=>{try{u()}catch(e){}});S.unsubs=[]}
+function enter(view,code,tab){
+  stopMeet();document.body.classList.remove('capture');
+  Object.assign(S,{view,code,tab:tab||S.tabMem||'attend',meet:null,meetLoaded:false,players:[],playersLoaded:false,courts:{},queue:[],matches:[],sel:null,courtSel:null,armed:null,voteFormDone:false});
+  S.meId=ls.get('bd2.me.'+code);
+  setHash((view==='meet'?'m':view)+'-'+code+(view==='meet'?'/'+S.tab:''));
+  S.unsubs=[
+    S.api.watchDoc(base(),r=>{S.meet=r;S.meetLoaded=true;render()}),
+    S.api.watchCol(base()+'/players',m=>{S.players=m;S.playersLoaded=true;render()}),
+    S.api.watchCol(base()+'/courts',c=>{const o={};c.forEach(x=>{o[x.id]=x});S.courts=o;render()}),
+    S.api.watchCol(base()+'/queue',q=>{S.queue=q.slice().sort((a,b)=>(a.order||0)-(b.order||0));render()}),
+    S.api.watchCol(base()+'/matches',m=>{S.matches=m.slice().sort((a,b)=>(a.endedAt||0)-(b.endedAt||0));render()})
+  ];
+  shell();
+}
+function goHome(){stopMeet();document.body.classList.remove('capture');Object.assign(S,{view:'home',code:null,sel:null,courtSel:null});setHash('');shell()}
+function setHash(h){try{history.replaceState(null,'',h?'#'+h:location.pathname+location.search)}catch(e){try{location.hash=h}catch(_){}}}
+function parseHash(){const m=/^#(m|vote|live)-(\d{4})(?:\/(\w+))?$/.exec(location.hash||'');return m?{view:m[1]==='m'?'meet':m[1],code:m[2],tab:m[3]}:null}
+
+/* ================= 그리기 ================= */
+const shuttleSVG=`<svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><path d="M9 4 L23 4 L19.5 19 L12.5 19 Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12 4 L14 19 M16 4 V19 M20 4 L18 19" stroke="currentColor" stroke-width="1.4"/><circle cx="16" cy="24" r="5" fill="var(--accent)"/></svg>`;
+const avHTML=(p,cls)=>`<i class="av ${cls||''}" style="background:${AVC[p.color||0]||AVC[0]}">${AV[p.av||0]||AV[0]}</i>`;
+const gHTML=p=>`<i class="gdot ${p.gender}">${p.gender==='M'?'남':'여'}</i><b class="gr">${esc(p.grade)}</b>`;
+function segHTML(name,opts,val,extra){return `<div class="seg ${extra||''}" role="radiogroup">${opts.map(([v,l,st])=>`<input type="radio" id="${name}-${v}" name="${name}" value="${esc(v)}" ${String(v)===String(val)?'checked':''}><label for="${name}-${v}" ${st?`style="${st}"`:''}>${l}</label>`).join('')}</div>`}
+function playerFields(p,v){
+  if(!v){try{v=JSON.parse(ls.get('bd2.profile'))}catch(e){}}
+  v=Object.assign({name:'',gender:'M',grade:'C',av:Math.floor(Math.random()*AV.length),color:Math.floor(Math.random()*AVC.length)},v||{});
+  return `<div class="field"><label for="${p}-name">닉네임</label><input class="input" id="${p}-name" name="name" maxlength="12" autocomplete="off" placeholder="예: 민수" value="${esc(v.name)}"></div>
+  <div class="row"><div class="field"><span class="lbl">성별</span>${segHTML(p+'-g',[['M','남'],['F','여']],v.gender,'g')}</div>
+  <div class="field"><span class="lbl">급수</span>${segHTML(p+'-gr',GRADES.map(g=>[g,g]),v.grade)}</div></div>
+  <div class="field"><span class="lbl">프로필 캐릭터</span>${segHTML(p+'-av',AV.map((a,i)=>[i,a]),v.av,'avs')}</div>
+  <div class="field"><span class="lbl">배경색</span>${segHTML(p+'-col',AVC.map((c,i)=>[i,'<span aria-label="색 '+(i+1)+'"></span>','background:'+c]),v.color,'cols')}</div>`;
+}
+function readPlayer(f,p){const r=n=>(f.querySelector(`[name="${p}-${n}"]:checked`)||{}).value;
+  return {name:f.querySelector('[name=name]').value,gender:r('g')||'M',grade:r('gr')||'C',av:+(r('av')||0),color:+(r('col')||0)}}
+
+function shell(){
+  const note=S.api&&S.api.kind==='local'?`<span class="mode-note">체험 모드: 이 기기에만 저장돼요</span>`:'';
+  $('#top').innerHTML=`<button class="brand" data-act="home" aria-label="처음 화면">${shuttleSVG}<span>코트보드</span><sup>2</sup></button><span class="spacer"></span>${note}`;
+  const m=$('#main');
+  if(S.view==='home')m.innerHTML=homeHTML();
+  else if(S.view==='vote')m.innerHTML=`<div id="voteHead"></div><div id="voteForm"></div><div id="voteTally"></div>`;
+  else if(S.view==='live')m.innerHTML=`<div id="headBox"></div><div id="tabBody"></div>`;
+  else m.innerHTML=`<div id="headBox"></div><nav class="tabs" id="tabs" role="tablist"></nav><div id="tabBody"></div>`;
+  render();
+}
+function homeHTML(){
+  return `<section class="hero">
+    <div><h1>출석부터 시상식까지,<br>모임 하나로 끝내기</h1>
+      <p>참석 투표를 받고, 당일 출석을 체크하면 게임 수·파트너 겹침·급수를 따져 코트를 자동으로 돌려요. 스코어를 넣으면 순위가 계산되고, 마감하면 1~3등 시상 화면이 나와요.</p></div>
+    <ol class="flow"><li><b>참석 투표</b><span>링크 공유</span></li><li><b>출석 체크</b><span>게스트 추가</span></li><li><b>스마트 매칭</b><span>코트 자동 배정</span></li><li><b>전광판</b><span>내 순서 확인</span></li><li><b>스코어 기록</b><span>승률·랭킹</span></li><li><b>시상식</b><span>1~3등 포디움</span></li></ol>
+  </section>
+  <div class="home-grid">
+    <form class="panel" id="fCreate" autocomplete="off"><h2>모임 만들기</h2>
+      <div class="field"><label for="c-name">모임 이름</label><input class="input" id="c-name" maxlength="24" placeholder="예: 수요일 저녁 정기 모임" required></div>
+      <div class="row"><div class="field" style="flex:1"><label for="c-date">날짜</label><input class="input" id="c-date" type="date" value="${today()}"></div>
+      <div class="field" style="flex:1"><label for="c-courts">코트 수</label><select class="input" id="c-courts">${Array.from({length:12},(_,i)=>`<option value="${i+1}" ${i===2?'selected':''}>${i+1}면</option>`).join('')}</select></div></div>
+      <button class="btn primary" type="submit">모임 만들기</button></form>
+    <form class="panel" id="fJoin" autocomplete="off"><h2>모임 들어가기</h2>
+      <div class="field"><label for="j-code">모임 번호 4자리</label><input class="input code-input" id="j-code" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" placeholder="0000" required></div>
+      <button class="btn accent" type="submit">들어가기</button>
+      <p class="muted small" style="margin:0">번호를 모르면 아래 목록에서 눌러서 들어가세요.</p></form>
+  </div>
+  <div class="section-h"><h2>진행 중인 모임</h2></div><div id="meetList"></div>
+  <div class="section-h"><h2>지난 모임</h2><span>마감한 모임의 순위와 시상 화면을 다시 볼 수 있어요</span></div><div id="pastList"></div>`;
+}
+function renderHomeLists(){
+  const el=$('#meetList');if(!el)return;
+  if(!S.meetsLoaded){el.innerHTML='<div class="loading">모임 목록을 불러오는 중…</div>';return}
+  const card=r=>`<button class="room-card" data-act="open" data-code="${esc(r.id)}"><span class="code">${esc(r.id)}</span><b>${esc(r.name)}</b><small>${esc(r.date||'')} · 코트 ${(r.courts||[]).length}면${r.status==='closed'?' · 마감':''}</small></button>`;
+  const open=S.meets.filter(r=>r.status!=='closed'),past=S.meets.filter(r=>r.status==='closed').slice(0,12);
+  el.innerHTML=open.length?`<div class="rooms">${open.map(card).join('')}</div>`:'<div class="empty-note">진행 중인 모임이 없어요. 위에서 새 모임을 만들어 보세요.</div>';
+  $('#pastList').innerHTML=past.length?`<div class="rooms">${past.map(card).join('')}</div>`:'<div class="empty-note">아직 마감한 모임이 없어요.</div>';
+}
+function render(){
+  if(S.view==='home'){renderHomeLists();return}
+  if(S.meetLoaded&&!S.meet){$('#main').innerHTML=`<div class="empty-note" style="margin-top:30px"><p>모임 번호 <b>${esc(S.code)}</b>을 찾을 수 없어요.</p><button class="btn primary" data-act="home">처음으로</button></div>`;renderBar();return}
+  if(!S.meetLoaded||!S.playersLoaded){const b=$('#tabBody')||$('#voteTally');if(b)b.innerHTML='<div class="loading">불러오는 중…</div>';return}
+  S.D=calc();
+  if(S.view==='vote'){renderVote();return}
+  if(!$('#tabBody')){shell();return}
+  renderHead();
+  if(S.view==='live'){$('#tabBody').innerHTML=liveHTML();renderBar();return}
+  $('#tabs').innerHTML=TABS.map(([k,l])=>`<button role="tab" aria-selected="${S.tab===k}" data-act="tab" data-tab="${k}">${l}</button>`).join('');
+  const f={attend:attendHTML,setup:setupHTML,board:boardHTML,live:liveHTML,record:recordHTML,final:finalHTML}[S.tab]||attendHTML;
+  const body=$('#tabBody');const sc=body.querySelector('.list ol');const st=sc?sc.scrollTop:0;
+  body.innerHTML=(closed()&&S.tab!=='final'&&S.tab!=='record'?`<div class="banner">마감한 모임이에요. 기록과 시상 화면만 볼 수 있어요.</div>`:'')+f();
+  const sc2=body.querySelector('.list ol');if(sc2)sc2.scrollTop=st;
+  renderBar();
+}
+function renderHead(){
+  const el=$('#headBox');if(!el)return;const r=S.meet;
+  el.innerHTML=`<div class="room-head">${S.view==='live'?`<button class="btn ghost sm" data-act="to-meet">운영 화면</button>`:`<button class="btn ghost sm" data-act="home">← 모임 목록</button>`}
+   <h1>${esc(r.name)}</h1><button class="codechip" data-act="copy-meet" title="모임 링크 복사">${esc(S.code)}</button>
+   <span class="muted small">${esc(r.date||'')}</span>${S.api.kind==='remote'?'<span class="live">실시간 연결</span>':''}${closed()?'<span class="state rest">마감</span>':''}</div>`;
+}
+
+/* ---------- 1. 출석 ---------- */
+function statusOf(p,D){
+  const pos=D.on[p.id];
+  if(p.out)return {k:'none',t:'퇴장'};
+  if(!p.here)return {k:'none',t:p.vote==='yes'?'참석 예정':p.vote==='no'?'불참':p.vote==='maybe'?'미정':'미출석'};
+  if(pos&&pos.q)return {k:'next',t:'대기 게임 '+pos.q+'번'};
+  if(pos)return {k:'play',t:'경기중 · 코트 '+pos.cid.slice(1)};
+  if(p.rest)return {k:'rest',t:'휴식중'};
+  return {k:'wait',t:'대기 '+(waitingList(D).findIndex(x=>x.id===p.id)+1)+'번째'};
+}
+function careerHTML(name){
+  const c=S.prof[name];
+  if(c===undefined){S.prof[name]=null;S.api.get('profiles/'+pkey(name)).then(d=>{S.prof[name]=d||{games:0};render()}).catch(()=>{});return '<span class="muted small">통산 기록 불러오는 중…</span>'}
+  if(!c||!c.games)return '<span class="muted small">통산 기록이 아직 없어요. 오늘 첫 기록을 남겨 보세요.</span>';
+  return `<span class="small"><b>통산 승률 ${pct(c.wins||0,c.losses||0)}%</b> · ${c.games}경기 ${c.wins||0}승 ${c.losses||0}패 · 득실 ${(c.pf||0)-(c.pa||0)>=0?'+':''}${(c.pf||0)-(c.pa||0)} · 모임 ${c.meets||0}회</span>`;
+}
+function attendHTML(){
+  const D=S.D;const P=S.players.filter(p=>!p.out);
+  const here=P.filter(p=>p.here),yes=P.filter(p=>!p.here&&p.vote==='yes'),maybe=P.filter(p=>!p.here&&p.vote==='maybe'),no=P.filter(p=>!p.here&&p.vote==='no'),etc=P.filter(p=>!p.here&&!p.vote);
+  const me=S.meId&&byId(S.meId);
+  const row=p=>{const s=D.st[p.id];return `<li class="prow ${p.here?'':'off'}">${avHTML(p)}<span class="nm">${esc(p.name)}</span>${gHTML(p)}${p.guest?'<span class="tag">게스트</span>':''}${p.id===S.meId?'<span class="tag">나</span>':''}
+    ${s.g?`<span class="muted small num">${s.g}게임 ${s.w}승</span>`:''}
+    <span class="acts">${p.here?`<button class="btn sm" data-act="here" data-id="${p.id}" data-v="0">출석 취소</button>`:`<button class="btn sm primary" data-act="here" data-id="${p.id}" data-v="1">출석</button>`}
+    <button class="btn sm" data-act="edit" data-id="${p.id}">수정</button><button class="btn sm danger ${S.armed==='rm-'+p.id?'armed':''}" data-act="remove" data-id="${p.id}">${S.armed==='rm-'+p.id?'확인':'제외'}</button></span></li>`};
+  const group=(title,arr,hint)=>arr.length?`<div class="section-h"><h2>${title}</h2><span>${arr.length}명${hint?' · '+hint:''}</span></div><ul class="plist">${arr.map(row).join('')}</ul>`:'';
+  const st=me&&statusOf(me,D);
+  return `<div class="row"><div class="kpis"><div class="kpi"><b>${here.length}</b><span>출석</span></div><div class="kpi"><b>${yes.length}</b><span>참석 예정</span></div><div class="kpi"><b>${maybe.length}</b><span>미정</span></div><div class="kpi"><b>${no.length}</b><span>불참</span></div></div>
+    <span class="spacer"></span><button class="btn accent" data-act="copy-vote">참석 투표 링크 복사</button><button class="btn" data-act="add-guest">+ 게스트·회원 추가</button></div>
+  ${me?`<div class="mebox">${avHTML(me,'lg')}<div><div class="row" style="gap:6px"><span class="who">${esc(me.name)}</span>${gHTML(me)}<span class="state ${st.k}">${st.t}</span></div>${careerHTML(me.name)}</div><span class="spacer"></span>
+     ${me.here?`<button class="btn sm" data-act="edit" data-id="${me.id}">프로필 수정</button>`:`<button class="btn primary" data-act="here" data-id="${me.id}" data-v="1">출석 체크</button>`}</div>`
+   :`<div class="mebox"><div><div class="who">아직 내 프로필이 없어요</div><span class="muted small">프로필을 만들고 출석 체크하면 내 승률과 다음 순서를 볼 수 있어요. 이미 명단에 있으면 같은 닉네임으로 입력하세요.</span></div><span class="spacer"></span><button class="btn primary" data-act="checkin-me">프로필 만들고 출석 체크</button></div>`}
+  ${group('출석',here,'자동 매칭 대상')}${group('참석 예정',yes,'도착하면 출석을 눌러 주세요')}${group('미정',maybe)}${group('불참',no)}${group('투표 안 함',etc)}
+  ${P.length?'':'<div class="empty-note">아직 명단이 없어요. 참석 투표 링크를 단톡방에 공유하거나, 직접 추가해 주세요.</div>'}`;
+}
+
+/* ---------- 사전 참석 투표 화면 ---------- */
+function renderVote(){
+  const r=S.meet;const me=S.meId&&byId(S.meId);
+  $('#voteHead').innerHTML=`<div class="room-head"><h1>${esc(r.name)}</h1><span class="codechip">${esc(S.code)}</span><span class="muted small">${esc(r.date||'')}</span></div>`;
+  if(!S.voteFormDone){S.voteFormDone=true;
+    $('#voteForm').innerHTML=closed()?'<div class="banner">마감한 모임이에요.</div>':`<form class="panel" id="fVote" autocomplete="off"><h2>참석 투표</h2>${playerFields('vt',me)}
+     <div class="field"><span class="lbl">참석 여부</span>${segHTML('vt-vote',[['yes','참석'],['maybe','미정'],['no','불참']],(me&&me.vote)||'yes')}</div>
+     <div class="row"><button class="btn primary" type="submit">투표하기</button><button class="btn ghost" type="button" data-act="to-meet">모임 화면 보기</button></div></form>`;}
+  const P=S.players.filter(p=>!p.out);const g=v=>P.filter(p=>p.vote===v);
+  const names=a=>a.length?`<ul class="lwait" style="margin-top:6px">${a.map(p=>`<li class="${p.id===S.meId?'me':''}">${avHTML(p)}${esc(p.name)}</li>`).join('')}</ul>`:'<p class="muted small" style="margin:6px 0 0">아직 없어요.</p>';
+  $('#voteTally').innerHTML=`<div class="section-h"><h2>투표 현황</h2><span>실시간으로 바뀌어요</span></div>
+   <div class="kpis"><div class="kpi"><b>${g('yes').length}</b><span>참석</span></div><div class="kpi"><b>${g('maybe').length}</b><span>미정</span></div><div class="kpi"><b>${g('no').length}</b><span>불참</span></div></div>
+   <div class="section-h"><h2>참석</h2></div>${names(g('yes'))}<div class="section-h"><h2>미정</h2></div>${names(g('maybe'))}<div class="section-h"><h2>불참</h2></div>${names(g('no'))}`;
+}
+
+/* ---------- 2. 설정 ---------- */
+function setupHTML(){
+  const o=opt();const r=S.meet;
+  const chk=(k,label,help)=>`<label class="check"><input type="checkbox" data-opt="${k}" ${o[k]?'checked':''}><span><b>${label}</b><br><span class="muted small">${help}</span></span></label>`;
+  return `<div class="setgrid">
+   <section class="panel"><h2>모임 정보</h2><div><b>${esc(r.name)}</b><div class="muted small">${esc(r.date||'')} · 모임 번호 ${esc(S.code)}</div></div>
+     <div class="row"><button class="btn sm" data-act="edit-meet">이름·날짜 수정</button><button class="btn sm" data-act="copy-meet">모임 링크 복사</button><button class="btn sm" data-act="copy-live">전광판 링크 복사</button></div></section>
+   <section class="panel"><h2>코트</h2><div class="cchips">${courtNums().map(n=>`<span class="cchip">${n}번<button data-act="court-del" data-n="${n}" aria-label="${n}번 코트 빼기">×</button></span>`).join('')}</div>
+     <div class="row"><button class="btn sm primary" data-act="court-add">+ 코트 추가</button><button class="btn sm" data-act="court-nums">번호 직접 입력</button></div>
+     <p class="muted small" style="margin:0">체육관에서 배정받은 코트 번호(예: 5, 6, 7번)에 맞춰 바꿀 수 있어요.</p></section>
+   <section class="panel"><h2>매칭 옵션</h2>
+     <div class="field"><span class="lbl">무엇을 먼저 맞출까요</span>${segHTML('o-prio',[['balance','레벨 밸런스 우선'],['rest','휴식 형평성 우선']],o.priority)}
+       <span class="muted small">${o.priority==='rest'?'대기 순서를 최대한 지켜요. 앞에서 6명 안에서만 조합을 골라요.':'비슷한 급수끼리 붙여요. 앞에서 9명 안에서 가장 고른 조합을 골라요.'}</span></div>
+     ${chk('noRepeat','파트너·상대 겹침 최소화','오늘 이미 같이 치거나 상대한 사람과는 덜 만나게 해요.')}
+     ${chk('mixed','성비 맞추기','남2·여2면 혼복으로, 3:1 조합은 피해요.')}
+     ${chk('autoFill','경기 종료 시 자동 배정','결과를 저장하면 그 코트에 다음 팀이 바로 들어가요.')}
+     <div class="field"><span class="lbl">대기 게임 자동 짜기</span>${segHTML('o-queue',[[0,'끄기'],[1,'1개'],[2,'2개'],[3,'3개']],o.queueAuto)}</div></section>
+  </div>
+  <div class="section-h"><h2>자동 매칭이 따지는 것</h2></div>
+  <div class="algo"><div><b>대기 시간과 게임 수</b>게임 수가 적은 사람, 그다음 오래 기다린 사람이 먼저예요. 맨 앞 사람은 다음 게임에 반드시 들어가요.</div>
+   <div><b>파트너·상대 겹침</b>오늘 경기 기록을 보고 같은 파트너는 3배, 같은 상대는 1배로 감점해서 새로운 조합을 찾아요.</div>
+   <div><b>급수 밸런스</b>4명의 급수 차이와 양 팀 급수 합 차이가 작은 조합을 골라 한쪽으로 쏠리지 않게 해요.</div></div>
+  <div class="section-h"><h2>모임 삭제</h2><span>명단과 경기 기록이 모두 지워져요</span></div>
+  <button class="btn danger ${S.armed==='del-meet'?'armed':''}" data-act="del-meet">${S.armed==='del-meet'?'정말 삭제 (되돌릴 수 없어요)':'이 모임 삭제'}</button>`;
+}
+
+/* ---------- 3. 코트 ---------- */
+function floorFrame(a,b){
+  return `<div class="floor"><svg class="lines" viewBox="0 0 134 61" preserveAspectRatio="none" aria-hidden="true">
+  <line x1="0" y1="4.6" x2="134" y2="4.6"/><line x1="0" y1="56.4" x2="134" y2="56.4"/><line x1="47.2" y1="0" x2="47.2" y2="61"/><line x1="86.8" y1="0" x2="86.8" y2="61"/>
+  <line x1="7.6" y1="0" x2="7.6" y2="61"/><line x1="126.4" y1="0" x2="126.4" y2="61"/><line x1="0" y1="30.5" x2="47.2" y2="30.5"/><line x1="86.8" y1="30.5" x2="134" y2="30.5"/></svg>
+  <div class="half ha"><span class="tlabel">A팀</span>${a}</div><div class="half hb"><span class="tlabel">B팀</span>${b}</div><div class="net" aria-hidden="true"></div></div>`;
+}
+function slotHTML(cid,i,id){
+  const m=id&&byId(id);const isSel=S.sel&&S.sel.kind==='slot'&&S.sel.c===cid&&S.sel.i===i;
+  if(!m)return `<button class="slot empty ${isSel?'sel':''}" data-act="slot" data-c="${cid}" data-i="${i}" aria-label="${esc(slotLabel(cid))} 빈자리">+ 빈자리</button>`;
+  return `<button class="slot ${isSel?'sel':''} ${m.id===S.meId?'me':''}" data-act="slot" data-c="${cid}" data-i="${i}">${avHTML(m)}<span class="tx"><span class="nm">${esc(m.name)}</span><span class="meta">${gHTML(m)}<span class="num">${S.D.st[m.id].g}게임</span></span></span></button>`;
+}
+function boardHTML(){
+  const D=S.D;const wl=waitingList(D),rl=restList();const playing=Object.values(D.on).filter(p=>!p.q).length;const o=opt();
+  const sumOf=sl=>{const ms=sl.map(byId);return `급수합 ${gs(ms[0])+gs(ms[1])} : ${gs(ms[2])+gs(ms[3])}`};
+  const anyFilled=courtIds().some(c=>getCourt(c).slots.some(Boolean));
+  const courts=courtIds().map(cid=>{
+    const c=getCourt(cid);const n=c.slots.filter(Boolean).length;const moving=S.courtSel===cid;
+    const pill=n===4?`<span class="pill play">경기중 <span class="num" data-since="${c.startedAt}">${mmss(Date.now()-c.startedAt)}</span></span>`:n?`<span class="pill part">${4-n}자리 비었음</span>`:`<span class="pill">빈 코트</span>`;
+    let foot;
+    if(n===0)foot=`<button class="btn sm primary" data-act="court-fill" data-c="${cid}">이 코트 팀 짜기</button>${S.courtSel||!anyFilled?'':`<button class="btn sm" data-act="court-move" data-c="${cid}">다른 코트와 교환</button>`}`;
+    else foot=`${n===4?`<button class="btn sm primary" data-act="court-end" data-c="${cid}">경기 종료 · 스코어 입력</button>`:`<button class="btn sm primary" data-act="court-fill" data-c="${cid}">빈자리 채우기</button>`}
+      <button class="btn sm" data-act="court-pair" data-c="${cid}">파트너 바꾸기</button><button class="btn sm" data-act="court-side" data-c="${cid}">좌우 바꾸기</button>
+      <button class="btn sm" data-act="court-move" data-c="${cid}">${moving?'교환 취소':'코트 이동'}</button>
+      <button class="btn sm danger ${S.armed==='clear-'+cid?'armed':''}" data-act="court-clear" data-c="${cid}">${S.armed==='clear-'+cid?'비우기 확인':'비우기'}</button>`;
+    const cover=S.courtSel&&!moving?`<div class="swap-cover"><button class="btn accent" data-act="court-swap" data-c="${cid}">코트 ${S.courtSel.slice(1)} ↔ 코트 ${cid.slice(1)} 교환</button></div>`:'';
+    return `<article class="court ${moving?'moving':''}"><header><h3>코트 ${cid.slice(1)}</h3>${pill}${n===4?`<span class="sum num">${sumOf(c.slots)}</span>`:''}</header>
+      ${floorFrame(slotHTML(cid,0,c.slots[0])+slotHTML(cid,1,c.slots[1]),slotHTML(cid,2,c.slots[2])+slotHTML(cid,3,c.slots[3]))}<footer>${foot}</footer>${cover}</article>`;
+  }).join('');
+  const qcards=S.queue.map((q,qi)=>{const sl=getCourt(q.id).slots;const n=sl.filter(Boolean).length;
+    return `<article class="qgame"><header><h3>대기 게임 ${qi+1}</h3>${qi===0?'<span class="pill next">다음 차례</span>':''}${n===4?`<span class="sum num">${sumOf(sl)}</span>`:`<span class="pill part">${4-n}자리 비었음</span>`}</header>
+      <div class="qteams"><div class="qteam">${slotHTML(q.id,0,sl[0])}${slotHTML(q.id,1,sl[1])}</div><span class="vs">VS</span><div class="qteam">${slotHTML(q.id,2,sl[2])}${slotHTML(q.id,3,sl[3])}</div></div>
+      <footer><button class="btn sm primary" data-act="q-go" data-c="${q.id}">빈 코트로 보내기</button>${qi>0?`<button class="btn sm" data-act="q-up" data-c="${q.id}">순서 앞으로</button>`:''}
+      <button class="btn sm" data-act="q-shuffle" data-c="${q.id}">다시 짜기</button><button class="btn sm" data-act="court-pair" data-c="${q.id}">파트너 바꾸기</button><button class="btn sm danger" data-act="q-del" data-c="${q.id}">취소</button></footer></article>`}).join('');
+  const rowHTML=(m,no,kind)=>{const isSel=S.sel&&S.sel.kind===kind&&S.sel.id===m.id;const sn=since(m,D);
+    return `<li class="wrow ${isSel?'sel':''}"><button class="who" data-act="${kind==='wait'?'wait':'restsel'}" data-id="${m.id}">${no?`<span class="no">${no}</span>`:''}${avHTML(m)}<span class="nm">${esc(m.name)}</span>${gHTML(m)}
+      <span class="gm">${D.st[m.id].g}게임${kind==='wait'&&sn?` · <span data-since="${sn}" data-fmt="min">${mins(Date.now()-sn)}분</span>`:''}</span></button>
+      ${kind==='wait'?`<button class="btn sm" data-act="rest" data-id="${m.id}" data-v="1">휴식</button>`:`<button class="btn sm primary" data-act="rest" data-id="${m.id}" data-v="0">복귀</button>`}</li>`};
+  return `<div class="toolbar"><button class="btn accent" data-act="auto">자동 배정</button><span class="state">${o.priority==='rest'?'휴식 형평성 우선':'레벨 밸런스 우선'}</span><button class="btn sm ghost" data-act="tab" data-tab="setup">옵션 바꾸기</button><span class="spacer"></span>
+    <span class="stats"><span>대기 <b>${wl.length}</b></span><span>경기중 <b>${playing}</b></span><span>대기 게임 <b>${S.queue.length}</b></span><span>휴식 <b>${rl.length}</b></span><span>끝난 경기 <b>${S.matches.length}</b></span></span></div>
+  <div class="board"><div class="maincol"><section class="courts" aria-label="코트">${courts}</section>
+    <div class="section-h"><h2>대기 게임</h2><span>${+o.queueAuto?`코트가 다 차면 ${o.queueAuto}개까지 자동으로 짜 둬요`:'자동 짜기 꺼짐'}</span></div>
+    <div class="queue">${qcards||'<div class="empty-note">아직 대기 게임이 없어요. 코트가 모두 차면 자동으로 만들어져요.</div>'}</div>
+    <button class="btn addbtn" data-act="q-add">+ 대기 게임 하나 더 짜기</button></div>
+   <aside class="side"><section class="list"><h3>대기 <span class="count">${wl.length}</span></h3><p class="hint">위에서부터 먼저 들어가요. 게임 수가 적은 사람, 오래 기다린 사람 순서예요.</p>
+     ${wl.length?`<ol>${wl.map((m,i)=>rowHTML(m,i+1,'wait')).join('')}</ol>`:'<p class="hint">대기 중인 사람이 없어요. 출석 탭에서 출석을 체크하세요.</p>'}
+     <button class="btn addbtn" data-act="add-guest">+ 게스트·회원 추가</button></section>
+    <section class="list"><h3>휴식중 <span class="count">${rl.length}</span></h3>${rl.length?`<ol>${rl.map(m=>rowHTML(m,0,'rest')).join('')}</ol>`:'<p class="hint">휴식 중인 사람이 없어요.</p>'}</section></aside></div>`;
+}
+function selId(){const s=S.sel;if(!s)return null;return s.kind==='slot'?getCourt(s.c).slots[s.i]:s.id}
+function renderBar(){
+  const bar=$('#bar');const s=S.view==='meet'&&S.tab==='board'?S.sel:null;const cs=S.view==='meet'&&S.tab==='board'?S.courtSel:null;
+  if(!s&&!cs){bar.hidden=true;bar.innerHTML='';return}
+  bar.hidden=false;
+  if(cs&&!s){bar.innerHTML=`<div class="in"><span class="msg"><b>코트 ${cs.slice(1)}</b> 선택됨 · 바꿀 코트의 '교환' 버튼을 누르세요</span><button class="btn" data-act="court-move" data-c="${cs}">취소</button></div>`;return}
+  const id=selId();const m=id&&byId(id);
+  if(!m){bar.innerHTML=`<div class="in"><span class="msg"><b>${esc(slotLabel(s.c))} 빈자리</b> 선택됨 · 넣을 사람을 대기 목록에서 누르세요</span><button class="btn" data-act="bar-cancel">취소</button></div>`;return}
+  bar.innerHTML=`<div class="in"><span class="msg"><b>${esc(m.name)}</b> 선택됨 · ${s.kind==='slot'?'다른 자리나 대기자를 누르면 서로 바뀌어요':'넣을 자리를 누르세요 (사람이 있으면 교체)'}</span>
+   ${s.kind==='slot'?`<button class="btn sm" data-act="bar-bench">대기로 빼기</button>`:''}${m.rest?'':`<button class="btn sm" data-act="bar-rest">휴식</button>`}
+   <button class="btn sm" data-act="bar-edit">정보 수정</button>${!S.meId||!byId(S.meId)?`<button class="btn sm" data-act="bar-isme">이 사람이 나예요</button>`:''}
+   <button class="btn sm danger ${S.armed==='bar-leave'?'armed':''}" data-act="bar-leave">${S.armed==='bar-leave'?'퇴장 확인':'퇴장'}</button><button class="btn sm" data-act="bar-cancel">취소</button></div>`;
+}
+
+/* ---------- 4. 전광판 ---------- */
+function liveHTML(){
+  const D=S.D;const wl=waitingList(D);const me=S.meId&&byId(S.meId);
+  const nm=id=>{const p=byId(id);return p?`${avHTML(p)}${esc(p.name)}`:'<span style="opacity:.6">빈자리</span>'};
+  const names=ids=>ids.map(id=>(byId(id)||{}).name).filter(Boolean).join(', ');
+  let mine;
+  if(!me)mine='<div><div class="big">내 순서 보기</div><div class="small">아래에서 내 이름을 고르면 다음 순서를 알려 드려요.</div></div>';
+  else{const pos=D.on[me.id];let big,sub='';
+    if(me.out)big='퇴장했어요';
+    else if(!me.here){big='아직 출석 전이에요';sub='출석을 체크하면 대기 순서에 들어가요.'}
+    else if(pos){const sl=getCourt(pos.cid).slots;const mate=sl[pos.i<2?1-pos.i:5-pos.i];const opp=pos.i<2?[sl[2],sl[3]]:[sl[0],sl[1]];
+      big=pos.q?`대기 게임 ${pos.q}번`:`지금 코트 ${pos.cid.slice(1)}에서 경기중`;
+      sub=`파트너 ${names([mate])||'미정'} · 상대 ${names(opp)||'미정'}`+(pos.q?(pos.q===1?' · 다음에 비는 코트로 들어가요':` · 앞에 ${pos.q-1}게임 있어요`):'')}
+    else if(me.rest){big='휴식중';sub='복귀를 누르면 다시 대기 순서에 들어가요.'}
+    else{const i=wl.findIndex(x=>x.id===me.id);big=`대기 ${i+1}번째`;sub=`앞에 대기 게임 ${S.queue.length}개 · 오늘 ${D.st[me.id].g}게임 · 대기 ${mins(waitMs(me,D,Date.now()))}분`}
+    mine=`${avHTML(me,'lg')}<div><div class="small">${esc(me.name)} 님</div><div class="big">${big}</div><div class="small">${sub}</div></div>`}
+  const sel=`<select id="meSel" aria-label="내 이름 고르기"><option value="">내 이름 고르기</option>${S.players.filter(p=>!p.out).sort((a,b)=>String(a.name).localeCompare(b.name,'ko')).map(p=>`<option value="${p.id}" ${p.id===S.meId?'selected':''}>${esc(p.name)}</option>`).join('')}</select>`;
+  const courts=courtIds().map(cid=>{const c=getCourt(cid);const n=c.slots.filter(Boolean).length;
+    if(!n)return `<div class="lcard idle"><h3>코트 ${cid.slice(1)}<span>빈 코트</span></h3></div>`;
+    return `<div class="lcard"><h3>코트 ${cid.slice(1)}<span data-since="${n===4?c.startedAt:0}">${n===4?mmss(Date.now()-c.startedAt):'준비 중'}</span></h3><div class="lteam">${nm(c.slots[0])} ${nm(c.slots[1])}</div><div class="lvs">VS</div><div class="lteam">${nm(c.slots[2])} ${nm(c.slots[3])}</div></div>`}).join('');
+  const queue=S.queue.map((q,qi)=>{const sl=getCourt(q.id).slots;return `<div class="lcard q"><h3>대기 게임 ${qi+1}<span>${qi===0?'다음 차례':''}</span></h3><div class="lteam">${nm(sl[0])} ${nm(sl[1])}</div><div class="lvs">VS</div><div class="lteam">${nm(sl[2])} ${nm(sl[3])}</div></div>`}).join('');
+  return `<div class="scoreboard"><div class="mynext">${mine}<span class="spacer"></span>${sel}</div>
+   <div><div class="section-h" style="margin-top:4px"><h2>진행 중인 경기</h2><span class="nocap"><button class="btn sm" data-act="copy-live">전광판 링크 복사</button></span></div><div class="lgrid">${courts}</div></div>
+   <div><div class="section-h" style="margin-top:4px"><h2>다음 경기</h2></div><div class="lgrid">${queue||'<div class="empty-note">대기 게임이 없어요.</div>'}</div></div>
+   <div><div class="section-h" style="margin-top:4px"><h2>대기 순서</h2><span>${wl.length}명</span></div>${wl.length?`<ol class="lwait">${wl.map((p,i)=>`<li class="${p.id===S.meId?'me':''}"><span class="muted small num">${i+1}</span>${avHTML(p)}${esc(p.name)}</li>`).join('')}</ol>`:'<div class="empty-note">대기 중인 사람이 없어요.</div>'}</div></div>`;
+}
+
+/* ---------- 5. 기록·랭킹 ---------- */
+function rankTable(D,limit){
+  const R=ranking(D);const now=Date.now();
+  if(!R.length)return '<div class="empty-note">아직 끝난 경기가 없어요. 코트 탭에서 경기 종료 후 스코어를 넣으면 순위가 나와요.</div>';
+  return `<div class="tablewrap"><table><thead><tr><th>순위</th><th class="l">이름</th><th>경기</th><th>승</th><th>패</th><th>승률</th><th>득점</th><th>실점</th><th>득실차</th><th>대기</th></tr></thead><tbody>
+   ${R.slice(0,limit||99).map((x,i)=>`<tr class="${x.p.id===S.meId?'me':''}"><td>${i+1}</td><td class="l"><span class="pn">${avHTML(x.p)}${esc(x.p.name)}</span></td><td>${x.s.g}</td><td>${x.s.w}</td><td>${x.s.l}</td><td>${x.rate}%</td><td>${x.s.pf}</td><td>${x.s.pa}</td><td>${x.diff>0?'+':''}${x.diff}</td><td>${mins(waitMs(x.p,D,now))}분</td></tr>`).join('')}</tbody></table></div>`;
+}
+function recordHTML(){
+  const D=S.D;const me=S.meId&&byId(S.meId);const nm=ids=>ids.map(id=>esc((byId(id)||{name:'(삭제됨)'}).name)).join(' · ');
+  const ms=S.matches.slice().reverse();
+  const myS=me&&D.st[me.id];
+  return `${me?`<div class="mebox">${avHTML(me,'lg')}<div><div class="who">${esc(me.name)} 님의 오늘</div><span class="small"><b>승률 ${pct(myS.w,myS.l)}%</b> · ${myS.g}경기 ${myS.w}승 ${myS.l}패 · 득실 ${myS.pf-myS.pa>=0?'+':''}${myS.pf-myS.pa} · 총 대기 ${mins(waitMs(me,D,Date.now()))}분</span><br>${careerHTML(me.name)}</div></div>`:''}
+  <div class="section-h" style="margin-top:6px"><h2>오늘의 랭킹</h2><span>승수 → 승률 → 득실차 순</span></div>${rankTable(D)}
+  <div class="section-h"><h2>경기 기록</h2><span>${ms.length}경기</span></div>
+  ${ms.length?`<ul class="mlist">${ms.map(m=>{const sc=typeof m.sa==='number';const aw=sc?m.sa>m.sb:m.win==='a',bw=sc?m.sb>m.sa:m.win==='b';
+    return `<li class="mrow"><span class="t ${aw?'win':''}">${nm(m.a||[])}</span><span class="sc">${sc?m.sa+' : '+m.sb:(aw?'승 : 패':bw?'패 : 승':'- : -')}</span><span class="t b ${bw?'win':''}">${nm(m.b||[])}</span>
+     <span class="acts row" style="gap:4px">${closed()?'':`<button class="btn sm" data-act="m-edit" data-id="${m.id}">수정</button><button class="btn sm danger ${S.armed==='md-'+m.id?'armed':''}" data-act="m-del" data-id="${m.id}">${S.armed==='md-'+m.id?'확인':'삭제'}</button>`}</span>
+     <span class="info">코트 ${m.court} · ${hhmm(m.endedAt)} 종료 · ${mins((m.endedAt||0)-(m.startedAt||0))}분 경기</span></li>`}).join('')}</ul>`:'<div class="empty-note">아직 기록된 경기가 없어요.</div>'}`;
+}
+
+/* ---------- 6. 마감·시상 ---------- */
+function finalHTML(){
+  const D=S.D;const R=ranking(D);const r=S.meet;
+  if(!closed()){
+    const live=courtIds().filter(c=>getCourt(c).slots.some(Boolean)).length;
+    return `<section class="panel"><h2>모임 마감</h2>
+      <p style="margin:0">마감하면 경기 매칭이 멈추고, 종합 성적을 정산해 1~3등 시상 화면을 만들어요. 이번 성적은 각자의 통산 기록에도 더해져요.</p>
+      <div class="kpis"><div class="kpi"><b>${S.matches.length}</b><span>끝난 경기</span></div><div class="kpi"><b>${R.length}</b><span>경기한 사람</span></div><div class="kpi"><b>${live}</b><span>진행 중 코트</span></div></div>
+      ${live?`<div class="banner" style="margin:0">아직 ${live}개 코트에 사람이 있어요. 마감하면 이 코트들은 결과 기록 없이 비워져요. 먼저 스코어를 입력해 주세요.</div>`:''}
+      <div><button class="btn danger ${S.armed==='close'?'armed':''}" data-act="close-meet">${S.armed==='close'?'정말 마감할게요 (되돌릴 수 없어요)':'모임 종료하고 시상식 만들기'}</button></div></section>
+    <div class="section-h"><h2>지금까지 순위</h2><span>마감 전 미리 보기</span></div>${rankTable(D,10)}`;
+  }
+  if(!R.length)return '<div class="empty-note">기록된 경기가 없어서 시상 화면을 만들 수 없어요.</div>';
+  const pod=(x,n)=>x?`<div class="pod p${n}"><span class="medal">${['🥇','🥈','🥉'][n-1]}</span>${avHTML(x.p,n===1?'xl':'lg')}<span class="pname">${esc(x.p.name)}</span><span class="pstat">${x.s.w}승 ${x.s.l}패 · ${x.rate}% · ${x.diff>0?'+':''}${x.diff}</span><div class="block">${n}</div></div>`:`<div class="pod p${n}"><div class="block">${n}</div></div>`;
+  const now=Date.now();const most=R.slice().sort((a,b)=>b.s.g-a.s.g)[0];const diff=R.slice().sort((a,b)=>b.diff-a.diff)[0];
+  const waitT=S.players.filter(p=>p.checkinAt).map(p=>({p,ms:waitMs(p,D,now)})).sort((a,b)=>b.ms-a.ms)[0];
+  return `<div class="podium-card" id="podium"><h2>${esc(r.name)} 시상식</h2><div class="sub">${esc(r.date||'')} · ${S.matches.length}경기 · ${R.length}명 참가</div>
+     <div class="podium">${pod(R[1],2)}${pod(R[0],1)}${pod(R[2],3)}</div></div>
+   <div class="awards"><div class="award">${avHTML(most.p,'lg')}<div><small>최다 경기상</small><b>${esc(most.p.name)}</b><small>${most.s.g}경기</small></div></div>
+     <div class="award">${avHTML(diff.p,'lg')}<div><small>득실왕</small><b>${esc(diff.p.name)}</b><small>득실차 ${diff.diff>0?'+':''}${diff.diff}</small></div></div>
+     ${waitT?`<div class="award">${avHTML(waitT.p,'lg')}<div><small>인내상 (최장 대기)</small><b>${esc(waitT.p.name)}</b><small>${mins(waitT.ms)}분</small></div></div>`:''}</div>
+   <div class="row nocap" style="margin-top:14px"><button class="btn accent" data-act="save-img">시상 이미지 저장</button><button class="btn" data-act="copy-result">결과 글 복사</button><button class="btn" data-act="capture">캡처용 화면</button></div>
+   <div class="section-h"><h2>종합 순위</h2><span>승수 → 승률 → 득실차 순</span></div>${rankTable(D)}
+   ${document.body.classList.contains('capture')?'<div class="row" style="margin-top:20px"><button class="btn sm ghost" data-act="capture">캡처 화면 끄기</button></div>':''}`;
+}
+function resultText(){
+  const D=calc();const R=ranking(D);const r=S.meet;
+  return `🏸 ${r.name} 결과 (${r.date||''})\n`+R.slice(0,10).map((x,i)=>`${['🥇','🥈','🥉'][i]||(i+1)+'위'} ${x.p.name} ${x.s.w}승 ${x.s.l}패 (승률 ${x.rate}%, 득실 ${x.diff>0?'+':''}${x.diff})`).join('\n')+`\n총 ${S.matches.length}경기 · ${R.length}명 참가`;
+}
+/* 시상 화면을 1080x1350 이미지로 그려서 저장한다 (인스타·단톡방 공유용) */
+async function saveImage(){
+  const D=calc();const R=ranking(D);const r=S.meet;if(!R.length)return;
+  try{await document.fonts.load('60px "Do Hyeon"')}catch(e){}
+  const c=document.createElement('canvas');c.width=1080;c.height=1350;const x=c.getContext('2d');
+  const g=x.createLinearGradient(0,0,0,1350);g.addColorStop(0,'#2F6E57');g.addColorStop(1,'#1D4B3F');x.fillStyle=g;x.fillRect(0,0,1080,1350);
+  x.strokeStyle='rgba(255,255,255,.18)';x.lineWidth=4;x.strokeRect(40,40,1000,1270);x.beginPath();x.moveTo(40,675);x.lineTo(1040,675);x.stroke();
+  x.textAlign='center';x.fillStyle='#fff';x.font='84px "Do Hyeon",sans-serif';x.fillText(String(r.name).slice(0,14),540,170);
+  x.font='500 34px "IBM Plex Sans KR",sans-serif';x.fillStyle='rgba(255,255,255,.85)';x.fillText(`${r.date||''} · ${S.matches.length}경기 · ${R.length}명 참가`,540,228);
+  const cols=[{i:1,cx:230,h:250,col:'#A9B4BD',m:'🥈'},{i:0,cx:540,h:340,col:'#E2B33C',m:'🥇'},{i:2,cx:850,h:190,col:'#C58A5A',m:'🥉'}];const baseY=980;
+  for(const k of cols){const e=R[k.i];x.fillStyle=k.col;x.fillRect(k.cx-140,baseY-k.h,280,k.h);
+    x.fillStyle='#1b1503';x.font='110px "Do Hyeon",sans-serif';x.fillText(String(k.i+1),k.cx,baseY-k.h/2+38);
+    if(!e)continue;const top=baseY-k.h;
+    x.fillStyle=AVC[e.p.color||0];x.beginPath();x.arc(k.cx,top-150,62,0,Math.PI*2);x.fill();
+    x.font='76px sans-serif';x.fillStyle='#000';x.fillText(AV[e.p.av||0],k.cx,top-124);
+    x.font='64px sans-serif';x.fillText(k.m,k.cx,top-232);
+    x.fillStyle='#fff';x.font='700 44px "IBM Plex Sans KR",sans-serif';x.fillText(String(e.p.name).slice(0,8),k.cx,top-52);
+    x.font='500 28px "IBM Plex Sans KR",sans-serif';x.fillStyle='rgba(255,255,255,.9)';x.fillText(`${e.s.w}승 ${e.s.l}패 · ${e.rate}%`,k.cx,top-14)}
+  x.textAlign='left';x.font='500 32px "IBM Plex Sans KR",sans-serif';
+  R.slice(3,8).forEach((e,n)=>{const y=1050+n*50;x.fillStyle='rgba(255,255,255,.75)';x.fillText(`${n+4}위`,110,y);x.fillStyle='#fff';x.fillText(String(e.p.name),200,y);
+    x.textAlign='right';x.fillStyle='rgba(255,255,255,.85)';x.fillText(`${e.s.w}승 ${e.s.l}패 · 득실 ${e.diff>0?'+':''}${e.diff}`,970,y);x.textAlign='left'});
+  const blob=await new Promise(res=>c.toBlob(res,'image/png'));const name=`시상식-${r.date||S.code}.png`;
+  try{const file=new File([blob],name,{type:'image/png'});if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:r.name+' 시상식'});return}}catch(e){if(e&&e.name==='AbortError')return}
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);toast('시상 이미지를 저장했어요.');
+}
+
+/* ================= 입력 창 ================= */
+function openSheet(kind,arg){
+  const el=$('#sheet');let h='';const foot=l=>`<div class="foot"><button class="btn" type="button" data-act="sheet-close">닫기</button><button class="btn primary" type="submit">${l}</button></div>`;
+  if(kind==='guest')h=`<form class="sheet" id="fPlayer" data-mode="guest" autocomplete="off"><h2>게스트·회원 추가</h2><p class="muted small" style="margin:0">폰이 없거나 처음 온 사람을 대신 등록해요.</p>${playerFields('pf',{name:''})}
+    <label class="check"><input type="checkbox" id="pf-guest" checked><span>게스트로 표시</span></label><label class="check"><input type="checkbox" id="pf-here" checked><span>지금 바로 출석 처리</span></label>${foot('추가')}</form>`;
+  if(kind==='checkin')h=`<form class="sheet" id="fPlayer" data-mode="checkin" autocomplete="off"><h2>프로필 만들고 출석 체크</h2>${playerFields('pf')}${foot('출석 체크')}</form>`;
+  if(kind==='edit'){const m=byId(arg);if(!m)return;h=`<form class="sheet" id="fPlayer" data-mode="edit" data-id="${m.id}" autocomplete="off"><h2>프로필 수정</h2>${playerFields('pf',m)}${foot('저장')}</form>`}
+  if(kind==='score'||kind==='medit'){
+    let a,b,sa='',sb='',title,attr;
+    if(kind==='score'){const sl=getCourt(arg).slots;a=[sl[0],sl[1]];b=[sl[2],sl[3]];title='코트 '+arg.slice(1)+' 결과 입력';attr=`data-c="${arg}"`}
+    else{const m=S.matches.find(x=>x.id===arg);if(!m)return;a=m.a;b=m.b;sa=typeof m.sa==='number'?m.sa:'';sb=typeof m.sb==='number'?m.sb:'';title='경기 결과 수정';attr=`data-mid="${m.id}"`}
+    const nm=ids=>ids.map(id=>esc((byId(id)||{name:'?'}).name)).join(' · ');
+    h=`<form class="sheet" id="fScore" ${attr} autocomplete="off"><h2>${title}</h2>
+      <div class="scorein"><div><div class="tn">A팀 · ${nm(a)}</div><input class="input" id="sc-a" inputmode="numeric" pattern="[0-9]*" maxlength="2" value="${sa}" placeholder="0"></div><span class="vs">:</span><div><div class="tn">B팀 · ${nm(b)}</div><input class="input" id="sc-b" inputmode="numeric" pattern="[0-9]*" maxlength="2" value="${sb}" placeholder="0"></div></div>
+      <div class="field"><span class="lbl">점수를 안 셌다면 승패만 고르세요</span>${segHTML('sc-win',[['a','A팀 승'],['b','B팀 승'],['none','승패 없음']],'none')}</div>${foot('결과 저장')}</form>`;
+  }
+  if(kind==='courts')h=`<form class="sheet" id="fCourts" autocomplete="off"><h2>코트 번호 직접 입력</h2><div class="field"><label for="cn-in">쉼표로 구분해서 입력</label><input class="input" id="cn-in" inputmode="numeric" value="${courtNums().join(', ')}" placeholder="예: 5, 6, 7"></div>${foot('저장')}</form>`;
+  if(kind==='meet')h=`<form class="sheet" id="fMeet" autocomplete="off"><h2>모임 정보 수정</h2><div class="field"><label for="mt-name">모임 이름</label><input class="input" id="mt-name" maxlength="24" value="${esc(S.meet.name)}"></div><div class="field"><label for="mt-date">날짜</label><input class="input" id="mt-date" type="date" value="${esc(S.meet.date||'')}"></div>${foot('저장')}</form>`;
+  if(kind==='copy')h=`<div class="sheet"><h2>복사해서 공유하세요</h2><textarea class="input" rows="5" readonly onclick="this.select()">${esc(arg)}</textarea><div class="foot"><button class="btn" data-act="sheet-close">닫기</button></div></div>`;
+  el.innerHTML=h;el.hidden=false;
+  const f=el.querySelector('input.input:not([type=date])');if(f)setTimeout(()=>f.focus(),30);
+}
+function closeSheet(){const el=$('#sheet');el.hidden=true;el.innerHTML=''}
+
+/* ================= 이벤트 ================= */
+const BOARD_ACTS=['auto','slot','wait','restsel','rest','court-fill','court-end','court-clear','court-pair','court-side','court-move','court-swap','q-add','q-go','q-up','q-shuffle','q-del','here','add-guest','checkin-me','remove','court-add','court-del','court-nums','bar-bench','bar-rest','bar-leave'];
+const ARMED=['remove','court-clear','bar-leave','del-meet','close-meet','m-del'];
+document.addEventListener('click',async e=>{
+  const b=e.target.closest('[data-act]');
+  if(!b){if(e.target.id==='sheet')closeSheet();return}
+  const a=b.dataset.act,c=b.dataset.c,id=b.dataset.id;
+  if(ARMED.indexOf(a)<0&&S.armed)S.armed=null;
+  if(closed()&&BOARD_ACTS.indexOf(a)>=0){toast('마감한 모임이라 바꿀 수 없어요.');return}
+  const arm=k=>{if(S.armed!==k){S.armed=k;render();return false}S.armed=null;return true};
+  switch(a){
+    case 'home':goHome();break;
+    case 'open':enter('meet',b.dataset.code,'attend');break;
+    case 'to-meet':enter('meet',S.code,S.view==='vote'?'attend':'board');break;
+    case 'tab':S.tab=b.dataset.tab;S.tabMem=S.tab;S.sel=null;S.courtSel=null;document.body.classList.remove('capture');setHash('m-'+S.code+'/'+S.tab);render();window.scrollTo(0,0);break;
+    case 'sheet-close':closeSheet();break;
+    case 'copy-meet':copy(`[${S.meet.name}] 모임 번호 ${S.code}\n${link('m-'+S.code)}`,'모임 링크를 복사했어요.');break;
+    case 'copy-vote':copy(`[${S.meet.name}] ${S.meet.date||''} 참석 투표\n아래 링크에서 참석 여부를 눌러 주세요.\n${link('vote-'+S.code)}`,'참석 투표 링크를 복사했어요. 단톡방에 붙여넣으세요.');break;
+    case 'copy-live':copy(`[${S.meet.name}] 실시간 전광판 (내 순서 확인)\n${link('live-'+S.code)}`,'전광판 링크를 복사했어요.');break;
+    case 'copy-result':copy(resultText(),'결과 글을 복사했어요.');break;
+    case 'save-img':await saveImage();break;
+    case 'capture':document.body.classList.toggle('capture');render();if(document.body.classList.contains('capture'))toast('캡처용 화면이에요. 캡처한 뒤 맨 아래 버튼으로 돌아오세요.');break;
+    case 'add-guest':openSheet('guest');break;
+    case 'checkin-me':openSheet('checkin');break;
+    case 'edit':openSheet('edit',id);break;
+    case 'here':await setHere(id,b.dataset.v==='1');break;
+    case 'remove':if(arm('rm-'+id))await removePlayer(id);break;
+    case 'edit-meet':openSheet('meet');break;
+    case 'court-add':{const ns=courtNums();if(ns.length>=12){toast('코트는 12면까지 넣을 수 있어요.');break}let n=1;while(ns.indexOf(n)>=0)n++;const mx=Math.max.apply(null,ns)+1;await w(()=>S.api.update(base(),{courts:ns.concat([mx<=99?mx:n]).sort((p,q)=>p-q)}));break}
+    case 'court-del':{const n=+b.dataset.n;const ns=courtNums();if(ns.length<=1){toast('코트는 최소 1면이 있어야 해요.');break}
+      if(getCourt('c'+n).slots.some(Boolean)){toast(n+'번 코트에 사람이 있어요. 먼저 비워 주세요.');break}
+      await w(()=>S.api.update(base(),{courts:ns.filter(x=>x!==n)}));break}
+    case 'court-nums':openSheet('courts');break;
+    case 'del-meet':if(arm('del-meet')){const code=S.code;const paths=S.players.map(p=>playerPath(p.id)).concat(Object.keys(S.courts).map(courtPath),S.queue.map(q=>queuePath(q.id)),S.matches.map(m=>base()+'/matches/'+m.id));
+      if(await w(async()=>{for(const p of paths)await S.api.del(p);await S.api.del('meets/'+code)})){ls.del('bd2.me.'+code);goHome();toast('모임을 삭제했어요.')}}break;
+    case 'close-meet':if(arm('close'))await closeMeet();break;
+    case 'auto':await autoAssign();break;
+    case 'slot':S.courtSel=null;await tap({kind:'slot',c,i:+b.dataset.i});break;
+    case 'wait':await tap({kind:'wait',id});break;
+    case 'restsel':await tap({kind:'rest',id});break;
+    case 'rest':await setRest(id,b.dataset.v==='1');S.sel=null;render();break;
+    case 'court-fill':await autoAssign(c);break;
+    case 'court-end':openSheet('score',c);break;
+    case 'court-clear':if(arm('clear-'+c)){await w(()=>S.api.set(courtPath(c),{slots:EMPTY4(),startedAt:0}));toast('코트를 비웠어요. 결과는 기록하지 않았어요.')}break;
+    case 'court-pair':{const s=getCourt(c).slots;await w(()=>setSlots(c,[s[0],s[2],s[3],s[1]]));break}
+    case 'court-side':{const s=getCourt(c).slots;await w(()=>setSlots(c,[s[2],s[3],s[0],s[1]]));break}
+    case 'court-move':S.sel=null;S.courtSel=S.courtSel===c?null:c;render();break;
+    case 'court-swap':{const from=S.courtSel;S.courtSel=null;if(from&&from!==c){const A=getCourt(from),B=getCourt(c);const now=Date.now();
+      await w(async()=>{await S.api.set(courtPath(from),{slots:B.slots,startedAt:B.slots.some(Boolean)?(B.startedAt||now):0});await S.api.set(courtPath(c),{slots:A.slots,startedAt:A.slots.some(Boolean)?(A.startedAt||now):0})});
+      toast('코트 '+from.slice(1)+'과 코트 '+c.slice(1)+'을 바꿨어요.')}render();break}
+    case 'q-add':await addQueueGame();break;
+    case 'q-go':await queueToCourt(c);break;
+    case 'q-up':await queueUp(c);break;
+    case 'q-shuffle':await reshuffleQueue(c);break;
+    case 'q-del':S.sel=null;if(await w(()=>S.api.del(queuePath(c))))toast('대기 게임을 취소했어요.');break;
+    case 'bar-cancel':S.sel=null;render();break;
+    case 'bar-bench':{const s=S.sel;S.sel=null;const sl=getCourt(s.c).slots;sl[s.i]=null;await w(()=>setSlots(s.c,sl));render();break}
+    case 'bar-rest':{const mid=selId();S.sel=null;if(mid)await setRest(mid,true);render();break}
+    case 'bar-edit':{const mid=selId();if(mid)openSheet('edit',mid);break}
+    case 'bar-isme':{const mid=selId();if(mid){setMe(mid);S.sel=null;toast('내 이름으로 지정했어요.');render()}break}
+    case 'bar-leave':if(arm('bar-leave')){const mid=selId();S.sel=null;if(mid)await removePlayer(mid);render()}break;
+    case 'm-edit':openSheet('medit',id);break;
+    case 'm-del':if(arm('md-'+id)){if(await w(()=>S.api.del(base()+'/matches/'+id)))toast('경기 기록을 지웠어요. 순위가 다시 계산됐어요.')}break;
+  }
+});
+document.addEventListener('change',async e=>{
+  const t=e.target;if(!S.meet)return;
+  if(t.id==='meSel'){if(t.value)setMe(t.value);else{S.meId=null;ls.del('bd2.me.'+S.code)}render();return}
+  const patch={};
+  if(t.name==='o-prio')patch.priority=t.value;else if(t.name==='o-queue')patch.queueAuto=+t.value;else if(t.dataset.opt)patch[t.dataset.opt]=t.checked;else return;
+  if(await w(()=>S.api.update(base(),{opt:Object.assign(opt(),patch)}))){toast('매칭 옵션을 바꿨어요.');if('queueAuto' in patch)topUpQueue()}
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!$('#sheet').hidden)closeSheet();else if(S.sel||S.courtSel){S.sel=null;S.courtSel=null;render()}}});
+document.addEventListener('submit',async e=>{
+  e.preventDefault();const f=e.target;
+  if(f.id==='fCreate'){
+    const name=$('#c-name').value.trim();if(!name){toast('모임 이름을 입력해 주세요.');return}
+    let code;const used=new Set(S.meets.map(r=>r.id));for(let k=0;k<60;k++){code=String(Math.floor(1000+Math.random()*9000));if(!used.has(code))break}
+    const n=+$('#c-courts').value;
+    try{await S.api.set('meets/'+code,{name:name.slice(0,24),date:$('#c-date').value||today(),courts:Array.from({length:n},(_,i)=>i+1),opt:opt(),status:'open',settled:false,createdAt:Date.now()});
+      enter('meet',code,'attend');toast('모임 '+code+' 을 만들었어요. 참석 투표 링크를 공유해 보세요.')}
+    catch(err){console.error(err);toast('모임을 만들지 못했어요. 잠시 후 다시 시도하세요.')}
+  }
+  if(f.id==='fJoin'){const code=$('#j-code').value.replace(/\D/g,'');if(code.length!==4){toast('모임 번호 4자리를 입력해 주세요.');return}enter('meet',code,'attend')}
+  if(f.id==='fVote'){const v=readPlayer(f,'vt');v.vote=(f.querySelector('[name="vt-vote"]:checked')||{}).value||'yes';
+    const me=S.meId&&byId(S.meId);let id;
+    if(me&&String(me.name).trim()===v.name.trim()){id=(await w(()=>S.api.update(playerPath(me.id),{vote:v.vote,gender:v.gender,grade:v.grade,av:v.av,color:v.color})))?me.id:null}
+    else id=await savePlayer(v,'vote');
+    if(id){setMe(id);toast({yes:'참석으로 투표했어요.',maybe:'미정으로 투표했어요.',no:'불참으로 투표했어요.'}[v.vote]);render()}}
+  if(f.id==='fPlayer'){const mode=f.dataset.mode;const v=readPlayer(f,'pf');
+    if(mode==='guest'){v.here=$('#pf-here').checked;const g=$('#pf-guest').checked;const id=await savePlayer(v,g?'guest':'guest');
+      if(id){if(!g)await w(()=>S.api.update(playerPath(id),{guest:false}));toast(v.name.trim()+' 님을 추가했어요.');openSheet('guest');topUpQueue()}}
+    else if(mode==='checkin'){const id=await savePlayer(v,'checkin');if(id){setMe(id);closeSheet();showCareer(v.name.trim());topUpQueue()}}
+    else{if(await savePlayer(v,'edit',f.dataset.id)){closeSheet();S.sel=null;toast('저장했어요.');render()}}}
+  if(f.id==='fScore'){
+    const ra=$('#sc-a').value.trim(),rb=$('#sc-b').value.trim();let sa=null,sb=null,win=(f.querySelector('[name="sc-win"]:checked')||{}).value||'none';
+    if(ra!==''||rb!==''){sa=parseInt(ra||'0',10);sb=parseInt(rb||'0',10);if(isNaN(sa)||isNaN(sb)||sa<0||sb<0||sa>99||sb>99){toast('점수는 0~99 사이 숫자로 넣어 주세요.');return}win=sa>sb?'a':sb>sa?'b':'none'}
+    if(f.dataset.c){if(await saveMatch(f.dataset.c,sa,sb,win))closeSheet()}
+    else if(await w(()=>S.api.update(base()+'/matches/'+f.dataset.mid,{sa,sb,win}))){closeSheet();toast('결과를 수정했어요. 순위가 다시 계산됐어요.')}
+  }
+  if(f.id==='fCourts'){const ns=Array.from(new Set($('#cn-in').value.split(/[^0-9]+/).map(Number).filter(n=>n>=1&&n<=99))).sort((a,b)=>a-b).slice(0,12);
+    if(!ns.length){toast('코트 번호를 1개 이상 넣어 주세요.');return}
+    const busy=courtNums().filter(n=>ns.indexOf(n)<0&&getCourt('c'+n).slots.some(Boolean));if(busy.length){toast(busy.join(', ')+'번 코트에 사람이 있어요. 먼저 비워 주세요.');return}
+    if(await w(()=>S.api.update(base(),{courts:ns}))){closeSheet();toast('코트 번호를 바꿨어요.')}}
+  if(f.id==='fMeet'){if(await w(()=>S.api.update(base(),{name:$('#mt-name').value.trim().slice(0,24)||S.meet.name,date:$('#mt-date').value||S.meet.date}))){closeSheet();toast('저장했어요.')}}
+});
+setInterval(()=>{const now=Date.now();document.querySelectorAll('[data-since]').forEach(el=>{const t=+el.dataset.since;if(!t)return;el.textContent=el.dataset.fmt==='min'?mins(now-t)+'분':mmss(now-t)})},1000);
+window.addEventListener('hashchange',()=>{const h=parseHash();if(!h){if(S.view!=='home')goHome();return}
+  if(h.code!==S.code||h.view!==S.view)enter(h.view,h.code,h.tab);else if(h.tab&&h.tab!==S.tab){S.tab=h.tab;render()}});
+
+/* ================= 시작 ================= */
+function boot(){
+  const cfg=window.FIREBASE_CONFIG;
+  if(cfg&&cfg.projectId&&window.firebase){try{const app=firebase.apps.length?firebase.app():firebase.initializeApp(cfg);S.api=FirebaseAPI(app.firestore())}catch(e){console.error(e);S.api=null}}
+  if(!S.api)S.api=Local;
+  S.api.watchCol('meets',list=>{S.meets=list.slice().sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));S.meetsLoaded=true;if(S.view==='home')renderHomeLists()});
+  const h=parseHash();if(h)enter(h.view,h.code,h.tab);else shell();
+}
+boot();
+})();
+</script>
+</body>
+</html>
